@@ -1,0 +1,40 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "test": "mocha test/dc_product.test.js",
+    "test:watch": "nodemon --exec mocha 'test/dc_product.test.js'"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.18.2",
+    "express-jwt": "^5.3.3",
+    "express-validator": "^6.10.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^2.0.1",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
+    "msnodesqlv8": "^2.0.11",
+    "mssql": "^6.4.1",
+    "multer": "^1.4.2",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.6.0",
+    "nodemailer": "^6.5.0",
+    "nodemon": "^2.0.20",
+    "xmlbuilder2": "^3.0.2"
+  },
+  "devDependencies": {
+    "chai": "^4.3.8",
+    "chai-http": "^4.4.0",
+    "mocha": "^10.2.0",
+    "supertest": "^6.3.3"
+  }
+}

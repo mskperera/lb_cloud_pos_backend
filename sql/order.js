@@ -1,0 +1,271 @@
+const { SP_STATUS } = require("../constants");
+const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
+
+exports.order_Insert = async (
+    tenant,
+  customerId,
+  terminalId,
+  sessionId,
+  overallDiscounts,
+  orderList,
+  paymentList,
+  IsStockSupported,
+  userLogId,
+  utcOffset,
+  pageName,
+  isConfirm
+) => {
+    const {pool}=tenant;
+  console.log("orderList_json", orderList);
+
+  const orderList_json = JSON.stringify(orderList);
+  const paymentList_json = JSON.stringify(paymentList);
+  const orderLevelDiscount_json = JSON.stringify(overallDiscounts);
+  console.log("paymentList_json", paymentList_json);
+  // const {isOrderDiscount,orderDiscountTypeId,orderDiscountValue,
+  //   orderDiscountReasonId,orderDiscountRemark}=orderLevelDiscount;
+  try {
+    const procedureParameters = [
+      customerId,
+      terminalId,
+      sessionId,
+      orderLevelDiscount_json,
+      orderList_json,
+      paymentList_json,
+      IsStockSupported,
+      userLogId,
+      utcOffset,
+      pageName,
+      isConfirm,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "orderNo",
+      "balanceAmount"
+    ];
+    const procedureName = "Order_Insert";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+    // console.log('executeStoredProcedureWithOutputParams',result);
+    const { responseStatus, outputMessage } = result.outputValues;
+    console.log("order_Insert result", result);
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    console.log("error", error);
+    throw error;
+  }
+};
+
+exports.order_select = async (
+  tenant,
+  orderId,
+  orderNo,
+  orderFromDate,orderToDate,
+  customerId,
+  customerCode,
+  customerName,
+  terminalId,
+  sessionId,
+  skip,
+  limit,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  try {
+    const {pool}=tenant;
+
+   
+
+    const procedureParameters = [
+      orderId,
+      orderNo,
+      orderFromDate,orderToDate,
+      customerId,
+      customerCode,
+    customerName,
+      terminalId,
+      sessionId,
+      skip,
+      limit,
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "totalRows",
+    ];
+    const procedureName = "Order_Select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.OrderReceipt_SelectByOrderId = async (
+    tenant,
+  orderId,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  try {
+    const {pool}=tenant;
+    const procedureParameters = [orderId, userLogId, utcOffset, pageName];
+    const procedureOutputParameters = ["responseStatus", "outputMessage"];
+    const procedureName = "OrderReceipt_SelectByOrderId";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.voidOrder_By_OrderId = async (
+    tenant,
+  orderId,
+  reasonId,
+  userLogId,
+  utcOffset,
+  pageName,
+  isConfirm
+) => {
+  try {
+    const {pool}=tenant;
+    const procedureParameters = [
+      orderId,
+      reasonId,
+      userLogId,
+      utcOffset,
+      pageName,
+      isConfirm,
+    ];
+    const procedureOutputParameters = ["responseStatus", "outputMessage"];
+    const procedureName = "VoidOrderByOrderId";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+exports.drp_order_voiding_reason_select = async (
+  tenant,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "drp_order_voiding_reason_select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.OrderFull_Select = async (
+  tenant,
+  orderId,
+  orderNo,
+  userLogId
+) => {
+  try {
+    const {pool}=tenant;
+
+   
+
+    const procedureParameters = [
+      orderId,
+      orderNo,
+      userLogId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "OrderFull_Select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
