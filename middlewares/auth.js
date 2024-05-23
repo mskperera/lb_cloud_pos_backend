@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 exports.requireSignin = async (req, res, next) => {
     
     const {jwtSecret}=req.tenant;
-    console.log('jwtSecret',jwtSecret)
+   
    //const token = req.cookies.accessToken;
    const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
- 
+    console.log('token',token)
    if (token == null) {
      return res.status(401).json({ error: 'Token is null.' });
    }

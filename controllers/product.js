@@ -3,8 +3,7 @@ const { product_delete, product_select_sql, product_insertUpdate_sql } = require
 exports.product_Add =async (req, res) => {
   const {
     tableId,
-    branchId,
-    companyId,
+    storeId,
     productNo,
     isProductNoAutoGenerate,
     productName,
@@ -29,8 +28,7 @@ exports.product_Add =async (req, res) => {
   const result=  await product_insertUpdate_sql(
     tenant,
       tableId,
-      branchId,
-      companyId,
+      storeId,
       productNo,
      isProductNoAutoGenerate,
       productName,
@@ -66,8 +64,7 @@ exports.product_Update =async (req, res) => {
   const { productId } = req.params;
 
   const {
-    branchId,
-    companyId,
+    storeId,
     productNo,
     productName,
     categoryIdList,
@@ -90,8 +87,7 @@ exports.product_Update =async (req, res) => {
   const result=  await product_insertUpdate_sql(
     tenant,
       tableId,
-      branchId,
-      companyId,
+      storeId,
       productNo,
       false,//isProductNoAutoGenerate
       productName,
