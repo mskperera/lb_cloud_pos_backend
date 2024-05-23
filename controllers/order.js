@@ -1,10 +1,4 @@
-// const sql = require("mssql");
-const { create } = require('xmlbuilder2');
-const { pool, executeStoredProcedureWithOutputParams } = require("../mysql");
-const { SP_STATUS } = require('../constants');
 const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select } = require('../sql/order');
-
-
 
 exports.orderAdd = async (req, res) => {
   const {
@@ -12,7 +6,7 @@ exports.orderAdd = async (req, res) => {
     overallDiscounts,
     orderList,paymentList,isConfirm
   } = req.body;
-console.log('req.body----------',req.body)
+
   const tenant=req.tenant;
   const utcOffset='5:30';
   const userLogId=1;

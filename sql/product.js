@@ -4,8 +4,7 @@ const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_e
 exports.product_insertUpdate_sql = async (
   tenant,
   tableId,
-  branchId,
-  companyId,
+  storeId,
   productNo,
   isProductNoAutoGenerate,
   productName,
@@ -27,8 +26,7 @@ exports.product_insertUpdate_sql = async (
     const {pool}=tenant;
     const procedureParameters = [
       tableId,
-      branchId,
-      companyId,
+      storeId,
       productNo,
       isProductNoAutoGenerate,
       productName,

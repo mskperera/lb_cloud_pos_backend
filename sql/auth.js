@@ -1,4 +1,3 @@
-const sql = require('mssql');
 const { executeStoredProcedureWithOutputParams } = require('../mysql');
 const { SP_STATUS } = require('../constants');
 
