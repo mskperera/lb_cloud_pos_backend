@@ -8,7 +8,6 @@ const cors = require('cors');
 
 const morgan = require('morgan');
 const { readdirSync } = require('fs');
-const { test } = require('./mysql');
 
 //test();
 
