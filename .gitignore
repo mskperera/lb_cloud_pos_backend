@@ -131,3 +131,4 @@ sql/sql.rar
 *.rar
 .env
 python/load_testing/env/*
+.env

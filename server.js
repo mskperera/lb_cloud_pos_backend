@@ -35,8 +35,6 @@ app.use(cookieParser());
 //app.use(cors({ origin: `${process.env.CLIENT_URL}` }));
 //}
 
-//app.use(cors());
-
 const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
 const corsOptions = {
@@ -57,6 +55,7 @@ const corsOptions = {
 // Use CORS middleware
 app.use(cors(corsOptions));
 
+//app.use(cors());
 
 //reoutes middlewares
 
