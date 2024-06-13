@@ -4,6 +4,7 @@ const {
   getSessionEndDetails_srv,
 } = require("../services/session");
 const { drp_session_select, drp_session_select_sql } = require("../sql/session");
+const { stringToBoolean } = require("../utils/utils");
 
 
 exports.sessionStart_ctrl = async (req, res) => {
@@ -35,6 +36,7 @@ exports.sessionStart_ctrl = async (req, res) => {
     });
   }
 
+  const _isConfirm=stringToBoolean(isConfirm);
   try {
     const sessionStartRes = await sessionStart_srv(
       tenant,
@@ -44,7 +46,7 @@ exports.sessionStart_ctrl = async (req, res) => {
       userLogId,
       utcOffset,
       pageName,
-      isConfirm
+      _isConfirm
     );
     if (sessionStartRes.exception) {
       return res.status(400).json(sessionStartRes);

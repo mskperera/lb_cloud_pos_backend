@@ -5,14 +5,14 @@ const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
 
 
- router.post("/session/start",setTenant,requireSignin, sessionStart_ctrl);
- router.post("/session/end",setTenant,requireSignin, sessionEnd_ctrl);
- router.post("/session/end/get",setTenant,requireSignin, getSessionEndDetails_ctrl);
+ router.post("/session/start",setTenant, sessionStart_ctrl);
+ router.post("/session/end",setTenant, sessionEnd_ctrl);
+ router.post("/session/end/get",setTenant, getSessionEndDetails_ctrl);
  router.get(
     '/dropdown/getDrpSession',
     setTenant,
-    requireSignin,
-    authMiddleware,
+    // requireSignin,
+    // authMiddleware,
     getDrpSession_ctrl
   );
   

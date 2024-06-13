@@ -14,8 +14,8 @@ const { requireSignin,authMiddleware } = require('../middlewares/auth');
 router.post(
   '/product/add',
   setTenant,
-  requireSignin,
-  authMiddleware,
+ // requireSignin,
+ // authMiddleware,
   product_Add
 );
 
