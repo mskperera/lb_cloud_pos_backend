@@ -1,6 +1,6 @@
 const express = require("express");
  const router = express.Router();
-const { sessionEnd, getSessionEndDetails, sessionStart_ctrl, sessionEnd_ctrl, getSessionEndDetails_ctrl, getDrpSession_ctrl } = require("../controllers/session");
+const { sessionEnd, getSessionEndDetails, sessionStart_ctrl, sessionEnd_ctrl, getSessionEndDetails_ctrl, getDrpSession_ctrl, get_latest_Session_details_ctrl } = require("../controllers/session");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
 
@@ -16,6 +16,12 @@ const { requireSignin, authMiddleware } = require("../middlewares/auth");
     getDrpSession_ctrl
   );
   
-  
+  router.get(
+    '/session/getLatestSessionDetails',
+    setTenant,
+    // requireSignin,
+    // authMiddleware,
+    get_latest_Session_details_ctrl
+  );
  
 module.exports = router;

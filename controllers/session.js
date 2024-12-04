@@ -2,6 +2,7 @@ const {
   sessionStart_srv,
   sessionEnd_srv,
   getSessionEndDetails_srv,
+  get_latest_Session_details_srv,
 } = require("../services/session");
 const { drp_session_select, drp_session_select_sql } = require("../sql/session");
 const { stringToBoolean } = require("../utils/utils");
@@ -16,28 +17,29 @@ exports.sessionStart_ctrl = async (req, res) => {
 
   if (!sessionName) {
     return res.status(422).json({
-      error: "sessionName is Required",
+      error:{message: "sessionName is Required"},
     });
   }
   if (!terminalId) {
     return res.status(422).json({
-      error: "terminalId is Required",
-    });
+      error:{message:"terminalId is Required",
+    }});
   }
   if (!openingCash) {
     return res.status(422).json({
-      error: "openingCash is Required",
-    });
+      error:{message: "openingCash is Required",
+    }});
   }
 
-  if (!isConfirm) {
+  if (isConfirm===null || isConfirm==="") {
     return res.status(422).json({
-      error: "isConfirm is Required",
-    });
+     error:{message:"isConfirm is Required",
+    }});
   }
 
-  const _isConfirm=stringToBoolean(isConfirm);
+
   try {
+    //const _isConfirm=stringToBoolean(isConfirm);
     const sessionStartRes = await sessionStart_srv(
       tenant,
       sessionName,
@@ -46,7 +48,7 @@ exports.sessionStart_ctrl = async (req, res) => {
       userLogId,
       utcOffset,
       pageName,
-      _isConfirm
+      isConfirm
     );
     if (sessionStartRes.exception) {
       return res.status(400).json(sessionStartRes);
@@ -64,21 +66,30 @@ exports.sessionStart_ctrl = async (req, res) => {
 };
 
 exports.sessionEnd_ctrl = async (req, res) => {
-  const { sessionId, terminalId, closingCash, isConfirm } = req.body;
+  const { sessionId,actualCash,short, isConfirm } = req.body;
+  
+  if (!sessionId) {
+    return res.status(422).json({
+      error: {message:"sessionId is Required"},
+    });
+  }
+  if (actualCash===null) {
+    return res.status(422).json({
+      error: {message:"actualCash is Required"},
+    });
+  }
+  if (short===null) {
+    return res.status(422).json({
+      error: {message:"short is Required"},
+    });
+  }
+
   const tenant = req.tenant;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
 
   try {
     const sessionEndRes = await sessionEnd_srv(
       tenant,
-      sessionId,
-      terminalId,
-      closingCash,
-      userLogId,
-      utcOffset,
-      pageName,
+      sessionId,actualCash,short,
       isConfirm
     );
     if (sessionEndRes.exception) {
@@ -98,22 +109,13 @@ exports.sessionEnd_ctrl = async (req, res) => {
 
 
 exports.getSessionEndDetails_ctrl = async (req, res) => {
-  const { terminalId, sessionId, skip, limit } = req.body;
+  const { sessionId } = req.body;
   const tenant = req.tenant;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
 
   try {
     const sessionEndDetailsRes = await getSessionEndDetails_srv(
       tenant,
-      terminalId,
-      sessionId,
-      skip,
-      limit,
-      userLogId,
-      utcOffset,
-      pageName
+      sessionId
     );
     if (sessionEndDetailsRes.exception) {
       return res.status(400).json(sessionEndDetailsRes);
@@ -153,4 +155,29 @@ exports.getDrpSession_ctrl =async (req, res) => {
     }
   });
 }
+};
+
+
+exports.get_latest_Session_details_ctrl = async (req, res) => {
+  const { terminalId } = req.query;
+  const tenant = req.tenant;
+
+  try {
+    const sessionEndDetailsRes = await get_latest_Session_details_srv(
+      tenant,
+      terminalId
+    );
+    if (sessionEndDetailsRes.exception) {
+      return res.status(400).json(sessionEndDetailsRes);
+    }
+
+    res.status(200).json(sessionEndDetailsRes);
+  } catch (err) {
+    console.log("getSessionEndDetails_ctrl() -> error: ", err);
+    res
+      .status(500)
+      .json({
+        error: "Something is wrong, please contact the service provider.",
+      });
+  }
 };

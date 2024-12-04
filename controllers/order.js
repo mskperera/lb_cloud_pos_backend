@@ -1,8 +1,8 @@
-const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select } = require('../sql/order');
+const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select, checkNewOrderReciptAvailability_sql } = require('../sql/order');
 
 exports.orderAdd = async (req, res) => {
   const {
-    customerId,terminalId,sessionId,
+    customerId,terminalId,sessionId,storeId,
     overallDiscounts,
     orderList,paymentList,isConfirm
   } = req.body;
@@ -15,11 +15,11 @@ exports.orderAdd = async (req, res) => {
 
   //visibletoEveryone,technicalReview
   try {
-    if (!customerId) {
-      return res.status(422).json({
-        error: {message:"customerId is Required"},
-      });
-    }
+    // if (!customerId) {
+    //   return res.status(422).json({
+    //     error: {message:"customerId is Required"},
+    //   });
+    // }
 
 
     if (!terminalId) {
@@ -32,6 +32,12 @@ exports.orderAdd = async (req, res) => {
         error: {message:"sessionId is Required"},
       });
     }
+    if (!storeId) {
+      return res.status(422).json({
+        error: {message:"storeId is Required"},
+      });
+    }
+    
 
     if (!orderList || !orderList[0]) {
       return res.status(422).json({
@@ -53,7 +59,7 @@ exports.orderAdd = async (req, res) => {
     
    //const {userId,roleId,gmtOffset,userLogId}=req.authUser;
 
-  const result=await order_Insert(tenant,customerId,terminalId,sessionId,
+  const result=await order_Insert(tenant,customerId,terminalId,sessionId,storeId,
     overallDiscounts,
     orderList,paymentList,IsStockSupported,
     userLogId,utcOffset,pageName,isConfirm)
@@ -230,30 +236,3 @@ exports.getOrderFull_ctrl =async (req, res) => {
 }
 };
 
-
-
-exports.checkNewOrderReciptAvailability_ctrl =async (req, res) => {
-
-  const { } = req.body;
- 
-  const tenant=req.tenant;
-  const userLogId=1;
-
-
-  try {
-
-  //const result= await OrderFull_Select(tenant,orderId,orderNo, userLogId);
-
-      res.json({isNewOrder:true});
-
-} catch (err) {
-  console.log('Errori: ',err)
-  return res.status(400).json({ 
-    error: {
-      message: err.message,
-      name: err.name, // include other properties if needed
-      stack: err.stack
-    }
-  });
-}
-};

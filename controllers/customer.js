@@ -6,7 +6,7 @@ const {
 } = require("../sql/customer");
 
 exports.addCustomer = async (req, res) => {
-  const { tableId, customerName, email, mobile, tel, whatsappNumber, remark } =
+  const { tableId, customerName, email, mobile, tel, remark } =
     req.body;
 
   const tenant = req.tenant;
@@ -49,7 +49,6 @@ exports.addCustomer = async (req, res) => {
       email,
       mobile,
       tel,
-      whatsappNumber,
       remark,
       saveType,
       userLogId,
@@ -74,7 +73,7 @@ exports.updateCustomer = async (req, res) => {
   const { customerId } = req.params;
   const tenant = req.tenant;
   console.log("customerid", customerId);
-  const { customerName, email, mobile, tel, whatsappNumber, remark } = req.body;
+  const { customerName, email, mobile, tel, remark } = req.body;
   const utcOffset = "5:30";
   const userLogId = 1;
   const pageName = "p";
@@ -90,7 +89,6 @@ exports.updateCustomer = async (req, res) => {
       email,
       mobile,
       tel,
-      whatsappNumber,
       remark,
       saveType,
       userLogId,
@@ -120,7 +118,6 @@ exports.selectCustomer = async (req, res) => {
     email,
     mobile,
     tel,
-    whatsappNumber,
     searchByKeyword,
     skip,
     limit,
@@ -141,7 +138,6 @@ exports.selectCustomer = async (req, res) => {
       email,
       mobile,
       tel,
-      whatsappNumber,
       searchByKeyword,
       skip,
       limit,

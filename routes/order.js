@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const {orderAdd, orderSelect, getOrderReceiptByOrderId, voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl, checkNewOrderReciptAvailability_ctrl} = require("../controllers/order");
+const {orderAdd, orderSelect, getOrderReceiptByOrderId, voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
 
@@ -28,6 +28,14 @@ router.get(
   getOrderReceiptByOrderId
 );
 
+router.get(
+  '/order/getReceiptExt/:orderId',
+  setTenant,
+
+  getOrderReceiptByOrderId
+);
+
+
 router.post(
   '/order/voidOrder',
   setTenant,
@@ -52,12 +60,5 @@ router.post(
   getOrderFull_ctrl
 );
 
-router.get(
-  '/order/checkNewOrderReciptAvailability',
-  setTenant,
-  requireSignin,
-  authMiddleware,
-  checkNewOrderReciptAvailability_ctrl
-);
 
 module.exports = router;

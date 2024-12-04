@@ -1,8 +1,6 @@
-const { category_select_sql, category_register_menu_select_sql, category_dropdown_select_sql } = require("../sql/category");
-const { drp_department_select_sql } = require("../sql/department");
+const { drp_brand_select_sql } = require("../sql/brand");
 
-
-exports.getDepartment_dropdown =async (req, res) => {
+exports.getBrands_dropdown =async (req, res) => {
 
   const { } = req.body;
   const tenant=req.tenant;
@@ -11,7 +9,7 @@ exports.getDepartment_dropdown =async (req, res) => {
   const pageName='p';
 
   try {
-  const result= await drp_department_select_sql(tenant, userLogId,utcOffset,pageName);
+  const result= await drp_brand_select_sql(tenant, userLogId,utcOffset,pageName);
 
       res.json(result);
 
@@ -26,5 +24,3 @@ exports.getDepartment_dropdown =async (req, res) => {
   });
 }
 };
-
-

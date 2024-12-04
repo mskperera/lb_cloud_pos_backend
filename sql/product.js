@@ -1,17 +1,28 @@
 const { SP_STATUS } = require("../constants");
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
+
 exports.product_insertUpdate_sql = async (
   tenant,
   tableId,
-  storeId,
+  storeIdList,
   productNo,
   isProductNoAutoGenerate,
   productName,
   categoryIdList,
-  measurementUnitID,
+  variationProductList,
+  comboProductDetailList,
+  measurementUnitId,
+  productTypeId,
+  isNotForSelling,
+  imgUrl,
+  isUnique,
+isStockTracked,
+isProductItem,
+  brandId,
+ // costPrice,
   unitPrice,
-  departmentId,
+  sku,
   barcode,
   reorderLevel,
   saveType,
@@ -23,24 +34,39 @@ exports.product_insertUpdate_sql = async (
   try {
 
     const categoryIdList_json=JSON.stringify(categoryIdList);
+    const variationProductList_json=JSON.stringify(variationProductList);
+    const comboProductDetailList_json=JSON.stringify(comboProductDetailList);
+    const storeIdList_json=JSON.stringify(storeIdList);
+console.log('saveType',saveType);
+    
     const {pool}=tenant;
     const procedureParameters = [
       tableId,
-      storeId,
+      storeIdList_json,
       productNo,
       isProductNoAutoGenerate,
       productName,
       categoryIdList_json,
-      measurementUnitID,
+      variationProductList_json,
+      comboProductDetailList_json,
+      measurementUnitId,
+      productTypeId,
+      isNotForSelling,
+      imgUrl,
+      isUnique,
+      isStockTracked,
+      isProductItem,
+      brandId,
+     // costPrice,
       unitPrice,
-      departmentId,
+      sku,
       barcode,
       reorderLevel,
       saveType,
       userLogId,
       utcOffset,
       pageName,
-      isConfirm,
+      isConfirm
     ];
     const procedureOutputParameters = ["responseStatus","outputMessage","productId"];
     const procedureName = "Product_Insert_Update";
@@ -125,7 +151,11 @@ exports.product_select_sql = async (
   productId,
   productNo,
   productName,
+  sku,
   barcode,
+  brandId,
+  storeId,
+  productTypeIds,
   productCategoryId,
   measurementUnitId,
   searchByKeyword,
@@ -142,8 +172,12 @@ exports.product_select_sql = async (
       productId,
       productNo,
       productName,
+      sku,
       barcode,
       productCategoryId,
+      brandId,
+      storeId,
+      productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
       measurementUnitId,
       searchByKeyword,
       skip,
@@ -158,6 +192,219 @@ exports.product_select_sql = async (
       "totalRows",
     ];
     const procedureName = "Product_Select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.product_select_extraDetails_sql = async (
+  tenant,
+  productId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      productId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "productTypeId",
+    ];
+    const procedureName = "Product_Select_extraDetails";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+exports.product_availaleStores_select_sql = async (
+  tenant,
+  productId,
+  variationProductId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      productId,
+      variationProductId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "product_availaleStores_select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.product_nonSerializedItemsSelect_sql = async (
+  tenant,
+  productId,
+  variationProductId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      productId,
+      variationProductId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "product_nonSerializedItemsSelect";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getProductTypes_drp_sql = async (
+  tenant,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "getProductTypes_drp";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+
+exports.drp_stores_select_sql = async (
+  tenant,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "drp_stores_select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.getVariationTypes_drp_sql = async (
+  tenant,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "getVariationTypes_drp";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,

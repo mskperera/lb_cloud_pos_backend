@@ -53,7 +53,7 @@ exports.session_Start_sql = async (
 
     const message = outputMessage;
     console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
-    return { message, records: null, values: result.outputValues };
+    return {success:{ message: outputMessage } };
   } catch (error) {
     console.error(consoleErrorText, `${functionName} -> error :`, error);
     throw error;
@@ -63,11 +63,8 @@ exports.session_Start_sql = async (
 exports.session_End_sql = async (
   tenant,
   sessionId,
-  terminalId,
-  closingCash,
-  userLogId,
-  utcOffset,
-  pageName,
+  actualCash,
+  short,
   isConfirm
 ) => {
   const functionName = "session_End_sql()";
@@ -75,13 +72,11 @@ exports.session_End_sql = async (
     const { pool } = tenant;
     const procedureParameters = [
       sessionId,
-      terminalId,
-      closingCash,
-      userLogId,
-      utcOffset,
-      pageName,
+      actualCash,
+      short,
       isConfirm,
     ];
+
     const procedureOutputParameters = ["responseStatus", "outputMessage"];
     const procedureName = "Session_End";
     const result = await executeStoredProcedureWithOutputParamsByPool(
@@ -103,7 +98,7 @@ exports.session_End_sql = async (
 
     const message = outputMessage;
     console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
-    return { message, records: result.results[0][0], values: result.outputValues };
+    return {success:{ message: outputMessage } };
   } catch (error) {
     console.error(consoleErrorText, `${functionName} -> error :`, error);
     throw error;
@@ -157,7 +152,48 @@ exports.session_Select_sql = async (
 
     const message = outputMessage;
     console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
-    return { message,records: result.results[0][0], values: result.outputValues };
+    return { message,records: result.results[0], values: result.outputValues };
+  } catch (error) {
+    console.error(consoleErrorText, `${functionName} -> error :`, error);
+    throw error;
+  }
+};
+
+exports.sessionEndDetails_Select_sql = async (
+  tenant,
+  sessionId,
+) => {
+  const functionName = "SessionEndDetails_Select_sql()";
+  try {
+    const { pool } = tenant;
+    const procedureParameters = [
+      sessionId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "SessionEndDetails_Select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      console.log(
+        consoleExceptionText,
+        `${functionName} -> exception:`,
+        outputMessage
+      );
+      return { exception: { message: outputMessage } };
+    }
+
+    const message = outputMessage;
+    console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
+    return { message,records: result.results[0], values: result.outputValues };
   } catch (error) {
     console.error(consoleErrorText, `${functionName} -> error :`, error);
     throw error;
@@ -196,6 +232,47 @@ exports.drp_session_select_sql = async (
 
     return result;
   } catch (error) {
+    throw error;
+  }
+};
+
+exports.Session_get_latest_Session_details_sql = async (
+  tenant,
+  terminalId
+) => {
+  const functionName = "session_Select_sql()";
+  try {
+    const { pool } = tenant;
+    const procedureParameters = [
+      terminalId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "Session_get_latest_Session_details";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      console.log(
+        consoleExceptionText,
+        `${functionName} -> exception:`,
+        outputMessage
+      );
+      return { exception: { message: outputMessage } };
+    }
+
+    const message = outputMessage;
+    console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
+    return { success:{message},records: result.results[0][0], values: result.outputValues };
+  } catch (error) {
+    console.error(consoleErrorText, `${functionName} -> error :`, error);
     throw error;
   }
 };

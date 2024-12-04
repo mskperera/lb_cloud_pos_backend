@@ -1,48 +1,48 @@
-const { product_delete, product_select_sql, product_insertUpdate_sql } = require('../sql/product');
+const { productAdd_srv, productUpdate_srv } = require('../services/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
     tableId,
-    storeId,
+    storeIdList,
     productNo,
     isProductNoAutoGenerate,
     productName,
     categoryIdList,
+    variationProductList,
+    comboProductDetailList,
     measurementUnitId,
+
+    productTypeId,
+    isNotForSelling,
+    imgUrl,
+    isUnique,
+    isStockTracked,
+    isProductItem,
+    brandId,
+    costPrice,
     unitPrice,
-    departmentId,
+    sku,
     barcode,
     reorderLevel
   } = req.body;
 
-  console.log('req.body',req.body);
+console.log('body:',req.body);
   const tenant=req.tenant;
-  const utcOffset='5:30';
-  const userLogId=1;
-  const pageName='p';
-  const promptBeforeContinue=false;
-  //const tableId=productId;
-  const saveType="I";
-
+  
   try {
-  const result=  await product_insertUpdate_sql(
+  const result=  await productAdd_srv(
     tenant,
-      tableId,
-      storeId,
-      productNo,
-     isProductNoAutoGenerate,
-      productName,
-      categoryIdList,
-      measurementUnitId,
-      unitPrice,
-      departmentId,
-      barcode,
-      reorderLevel,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      promptBeforeContinue);
+    tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
+    comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
+    brandId,costPrice,unitPrice,sku,barcode,reorderLevel);
+
+
+if(result.error){
+    return res.status(422).json({
+      error:result.error
+    });
+}
 
       res.json(result);
  
@@ -63,17 +63,28 @@ exports.product_Update =async (req, res) => {
 
   const { productId } = req.params;
 
+
   const {
-    storeId,
+    storeIdList,
     productNo,
+    isProductNoAutoGenerate,
     productName,
     categoryIdList,
+    variationProductList,
+    comboProductDetailList,
     measurementUnitId,
+    productTypeId,
+    isNotForSelling,
+    imgUrl,
+    isUnique,
+    isStockTracked,
+    isProductItem,
+    brandId,
+   // costPrice,
     unitPrice,
-    departmentId,
+    sku,
     barcode,
-    reorderLevel,
-    isConfirm
+    reorderLevel
   } = req.body;
 
   const tenant=req.tenant;
@@ -82,26 +93,46 @@ exports.product_Update =async (req, res) => {
   const pageName='p';
   const tableId=productId;
   const saveType="U";
+  const promptBeforeContinue=false;
+  
 
   try {
-  const result=  await product_insertUpdate_sql(
+  const result=  await productUpdate_srv(
     tenant,
-      tableId,
-      storeId,
-      productNo,
-      false,//isProductNoAutoGenerate
-      productName,
-      categoryIdList,
+    tableId,
+    storeIdList,
+    productNo,
+   isProductNoAutoGenerate,
+    productName,
+    categoryIdList,
+    variationProductList,
+    comboProductDetailList,
     measurementUnitId,
-      unitPrice,
-      departmentId,
-      barcode,
-      reorderLevel,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm);
+    productTypeId,
+    isNotForSelling,
+    imgUrl,
+    isUnique,
+    isStockTracked,
+    isProductItem,
+    brandId,
+   // costPrice,
+    unitPrice,
+    sku,
+    barcode,
+    reorderLevel,
+    saveType,
+    userLogId,
+    utcOffset,
+    pageName,
+    promptBeforeContinue
+    );
+
+
+    if(result.error){
+      return res.status(422).json({
+        error:result.error
+      });
+  }
 
       res.json(result);
  
@@ -118,16 +149,27 @@ exports.product_Update =async (req, res) => {
 };
 
 
+
+
+
+
+
+
+
+
+
+
 exports.getProducts =async (req, res) => {
   console.log('products_Select',req.body);
-  const {productId,productNo, productName, barcode,categoryId,measurementUnitId,searchByKeyword,limit,skip } = req.body;
+  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+    categoryId,measurementUnitId,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
   const userLogId=1;
   const pageName='p';
 
   try {
-  const result= await product_select_sql(tenant,productId,  productNo, productName,barcode,categoryId,measurementUnitId,searchByKeyword,
+  const result= await product_select_sql(tenant,productId,  productNo, productName,sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,searchByKeyword,
     skip,limit, userLogId,utcOffset,pageName);
    // console.log('products_Select result',result.results);
       res.json(result);
@@ -158,6 +200,152 @@ exports.product_delete =async (req, res) => {
   try {
   const result=  await product_delete(tenant,productId, userLogId,utcOffset,pageName,_isConfirm);
   res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+exports.getProductTypes_drp =async (req, res) => {
+
+  const { } = req.body;
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=1;
+  const pageName='p';
+
+  try {
+  const result= await getProductTypes_drp_sql(tenant, userLogId,utcOffset,pageName);
+
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getProductExtraDetails =async (req, res) => {
+
+  const {productId} = req.query;
+  const tenant=req.tenant;
+
+  try {
+  const result= await product_select_extraDetails_sql(tenant,productId);
+   // console.log('products_Select result',result.results);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getProductAvailaleStores =async (req, res) => {
+
+  const {productId,variationProductId} = req.body;
+  const tenant=req.tenant;
+
+  try {
+  const result= await product_availaleStores_select_sql(tenant,productId,variationProductId);
+    console.log('getProductAvailaleStores result',productId,result);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getNonSerializedItems =async (req, res) => {
+
+  const {productId,variationProductId} = req.body;
+  const tenant=req.tenant;
+
+  try {
+  const result= await product_nonSerializedItemsSelect_sql(tenant,productId,variationProductId);
+   // console.log('products_Select result',result.results);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+
+exports.getStores_ctrl =async (req, res) => {
+
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=1;
+  const pageName='p';
+
+  try {
+  const result= await drp_stores_select_sql(tenant, userLogId,utcOffset,pageName);
+
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getVariationTypes_drp =async (req, res) => {
+
+  const { } = req.body;
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=1;
+  const pageName='p';
+
+  try {
+  const result= await getVariationTypes_drp_sql(tenant, userLogId,utcOffset,pageName);
+
+      res.json(result);
 
 } catch (err) {
   console.log('Errori: ',err)
