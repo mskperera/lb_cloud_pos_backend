@@ -110,3 +110,30 @@ exports.getTerminalDetailslByTerminalId_sql = async (
     throw error;
   }
 };
+
+exports.getFrontendIdByTerminalId_sql = async (
+  tenant,
+  terminalId
+) => {
+  const functionName = "get_frontendId_by_terminalId_sql()";
+  try {
+    const { pool } = tenant;
+    const procedureParameters = [
+      terminalId
+    ];
+    const procedureOutputParameters = [
+    ];
+    const procedureName = "get_frontendId_by_terminalId";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return {records: result.results[0][0] };
+  } catch (error) {
+    console.error(consoleErrorText, `${functionName} -> error :`, error);
+    throw error;
+  }
+};

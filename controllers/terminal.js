@@ -3,7 +3,7 @@ const {
   sessionEnd_srv,
   getSessionEndDetails_srv,
 } = require("../services/session");
-const { drp_teminallByUserId, getAssignedTerminalsByUserId_sql,getTerminalDetailslByTerminalId_sql } = require("../sql/terminal");
+const { drp_teminallByUserId, getAssignedTerminalsByUserId_sql,getTerminalDetailslByTerminalId_sql, getPrintdesk_select_by_terminalId_sql, getFrontendIdByTerminalId_sql } = require("../sql/terminal");
 const { stringToBoolean } = require("../utils/utils");
 
 
@@ -84,4 +84,25 @@ exports.getTerminalDetailslByTerminalId_ctrl =async (req, res) => {
 }
 }
 
+
+exports.getFrontendIdByTerminalId_ctrl =async (req, res) => {
+
+  const {terminalId } = req.query;
+  const tenant=req.tenant;
+  try {
+  const result= await getFrontendIdByTerminalId_sql(tenant,terminalId);
+
+      res.json(result.records);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+}
 
