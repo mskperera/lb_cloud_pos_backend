@@ -2,6 +2,8 @@ const {
   session_Start_sql,
   session_End_sql,
   session_Select_sql,
+  sessionEndDetails_Select_sql,
+  Session_get_latest_Session_details_sql,
 } = require("../sql/session");
 
 exports.sessionStart_srv = async (
@@ -33,24 +35,12 @@ exports.sessionStart_srv = async (
 
 exports.sessionEnd_srv = async (
   tenant,
-  sessionId,
-  terminalId,
-  closingCash,
-  userLogId,
-  utcOffset,
-  pageName,
-  isConfirm
+  sessionId,actualCash,short, isConfirm
 ) => {
   try {
     return await session_End_sql(
       tenant,
-      sessionId,
-      terminalId,
-      closingCash,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm
+      sessionId,actualCash,short, isConfirm
     );
   } catch (error) {
     console.log("sessionEnd_srv()-> error :", error);
@@ -60,27 +50,31 @@ exports.sessionEnd_srv = async (
 
 exports.getSessionEndDetails_srv = async (
   tenant,
-  terminalId,
   sessionId,
-  skip,
-  limit,
-  userLogId,
-  utcOffset,
-  pageName
 ) => {
   try {
-    return await session_Select_sql(
+    return await sessionEndDetails_Select_sql(
       tenant,
-      terminalId,
-      sessionId,
-      skip,
-      limit,
-      userLogId,
-      utcOffset,
-      pageName
+      sessionId
     );
   } catch (error) {
     console.log("getSessionEndDetails_srv()-> error :", error);
     throw error;
   }
 };
+
+exports.get_latest_Session_details_srv = async (
+  tenant,
+  terminalId,
+) => {
+  try {
+    return await Session_get_latest_Session_details_sql(
+      tenant,
+      terminalId
+    );
+  } catch (error) {
+    console.log("getSessionEndDetails_srv()-> error :", error);
+    throw error;
+  }
+};
+

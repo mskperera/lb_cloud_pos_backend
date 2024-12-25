@@ -5,12 +5,13 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js",
-    "test": "mocha test/dc_product.test.js",
+    "test": "mocha test/product.test.js",
     "test:watch": "nodemon --exec mocha 'test/dc_product.test.js'"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.7.7",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -27,12 +28,15 @@
     "mysql2": "^3.6.0",
     "nodemailer": "^6.5.0",
     "nodemon": "^2.0.20",
+    "socket.io-client": "^2.4.0",
+    "ws": "^8.18.0",
     "xmlbuilder2": "^3.0.2"
   },
   "devDependencies": {
-    "chai": "^4.3.8",
+    "chai": "^4.5.0",
     "chai-http": "^4.4.0",
-    "mocha": "^10.2.0",
+    "cross-env": "^7.0.3",
+    "mocha": "^10.7.3",
     "supertest": "^6.3.3"
   }
 }

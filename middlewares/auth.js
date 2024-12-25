@@ -8,7 +8,7 @@ exports.requireSignin = async (req, res, next) => {
    //const token = req.cookies.accessToken;
    const authHeader = req.headers['authorization'];
     const token = authHeader && authHeader.split(' ')[1];
-    console.log('token',token)
+    //console.log('token',token)
    if (token == null) {
      return res.status(401).json({ error: 'Token is null.' });
    }
@@ -21,7 +21,7 @@ exports.requireSignin = async (req, res, next) => {
       }
 
       req.authUser = verifiedData;
-      console.log('verifiedData',verifiedData);
+      //console.log('verifiedData',verifiedData);
       next();
     });
 
@@ -34,7 +34,7 @@ exports.requireSignin = async (req, res, next) => {
  exports.authMiddleware = async (req, res, next) => {
    try {
 
-     console.log("authMiddleware",  req.authUser);
+     //console.log("authMiddleware",  req.authUser);
      next();
    } catch (error) {
      console.log("error ****:", error);

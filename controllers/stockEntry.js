@@ -1,43 +1,47 @@
 const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select, checkNewOrderReciptAvailability_sql } = require('../sql/order');
+const { stockEntry_Insert, stockEntry_Select } = require('../sql/stockEntry');
 
-exports.orderAdd = async (req, res) => {
+exports.stockAdd = async (req, res) => {
   const {
-    customerId,terminalId,sessionId,storeId,
-    overallDiscounts,
-    orderList,paymentList,isConfirm
+    supplierId,
+    storeId,
+    stockReceivedDate,
+    amountPaid,
+    remark,
+    supplierBillNo,
+    orderList,
+    isConfirm
   } = req.body;
 
   const tenant=req.tenant;
   const utcOffset='5:30';
   const userLogId=1;
-  const IsStockSupported=false;
   const pageName='p';
 
-  //visibletoEveryone,technicalReview
   try {
-    // if (!customerId) {
-    //   return res.status(422).json({
-    //     error: {message:"customerId is Required"},
-    //   });
-    // }
 
-
-    if (!terminalId) {
-      return res.status(422).json({
-        error: {message:"terminalId is Required"},
-      });
-    }
-    if (!sessionId) {
-      return res.status(422).json({
-        error: {message:"sessionId is Required"},
-      });
-    }
     if (!storeId) {
       return res.status(422).json({
         error: {message:"storeId is Required"},
       });
     }
-    
+    if (!stockReceivedDate) {
+      return res.status(422).json({
+        error: {message:"stockReceivedDate is Required"},
+      });
+    }
+
+    if (!amountPaid) {
+      return res.status(422).json({
+        error: {message:"amountPaid is Required"},
+      });
+    }
+
+    // if (!remark) {
+    //   return res.status(422).json({
+    //     error: {message:"remark is Required"},
+    //   });
+    // }
 
     if (!orderList || !orderList[0]) {
       return res.status(422).json({
@@ -57,12 +61,17 @@ exports.orderAdd = async (req, res) => {
       });
     }
     
-   //const {userId,roleId,gmtOffset,userLogId}=req.authUser;
-
-  const result=await order_Insert(tenant,customerId,terminalId,sessionId,storeId,
-    overallDiscounts,
-    orderList,paymentList,IsStockSupported,
-    userLogId,utcOffset,pageName,isConfirm)
+  const result=await stockEntry_Insert(tenant, supplierId,
+    storeId,
+    stockReceivedDate,
+    amountPaid,
+    remark,
+    supplierBillNo,
+    orderList,
+    userLogId,
+    utcOffset,
+    pageName,
+    isConfirm)
 
     res.status(201).json(result);
   } catch (err) {
@@ -78,21 +87,21 @@ exports.orderAdd = async (req, res) => {
 };
 
 
-exports.orderSelect =async (req, res) => {
+exports.getStockEntries =async (req, res) => {
 
-  const {orderId,orderNo, orderFromDate,orderToDate,customerId, customerCode,
-    customerName,terminalId,sessionId,skip,limit } = req.body;
-  console.log('orderFromDate: ',orderFromDate)
-  console.log('orderToDate: ',orderToDate)
+  const {stockEntryId,  storeId, stockEntryRefNo, fromDate, toDate, supplierId, supplierCode,
+        suppliertName, skip, limit } = req.body;
+
   const tenant=req.tenant;
   const utcOffset='5:30';
   const userLogId=1;
   const pageName='p';
 
   try {
-  const result= await order_select(tenant,orderId,orderNo, orderFromDate,orderToDate,customerId, customerCode,
-    customerName,terminalId,sessionId,
-    skip,limit, userLogId,utcOffset,pageName);
+  const result= await stockEntry_Select( tenant,
+    stockEntryId,  storeId, stockEntryRefNo, fromDate, toDate,
+        supplierId, supplierCode, suppliertName,
+        skip, limit, userLogId, utcOffset, pageName);
 
       res.json(result);
 
@@ -101,7 +110,7 @@ exports.orderSelect =async (req, res) => {
   return res.status(400).json({ 
     error: {
       message: err.message,
-      name: err.name, // include other properties if needed
+      name: err.name,
       stack: err.stack
     }
   });

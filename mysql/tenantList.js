@@ -39,6 +39,20 @@ const getTenant=async(tenantId)=>{
       port
     });
 
+    // const pool = mysql.createPool({
+    //   connectionLimit: 10, // Small pool for efficiency
+    //   host: hostName,
+    //   user: dbUsername,
+    //   password: dbPassword,
+    //   database: dbName,
+    //   port,
+    //   waitForConnections: true,
+    //   queueLimit: 0, // Prevent rejecting requests when all connections are busy
+    //   connectTimeout: 10000, // 10-second timeout
+    // });
+
+    
+
     foundTenant = { pool, tenantId,jwtSecret };
     tenantList.push(foundTenant);
     console.log('new pool is added to the poollist');
@@ -50,7 +64,7 @@ const getTenant=async(tenantId)=>{
     tenantId: item.tenantId,
     poolStatus: item.pool._allConnections.length, // This line gets the number of connections in the pool
   }));
-  console.log('tenantData',tenantData)
+  console.log('tenantData iiii',tenantData)
 
   return tenant;
   ///const {pool}=foundTenant;

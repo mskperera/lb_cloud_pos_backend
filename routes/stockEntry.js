@@ -1,23 +1,25 @@
 const express = require("express");
 const router = express.Router();
-const {orderAdd, orderSelect, getOrderReceiptByOrderId, voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
+const {orderAdd, orderSelect, getOrderReceiptByOrderId, 
+  voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
+const { stockAdd, getStockEntries } = require("../controllers/stockEntry");
 
 router.post(
-  "/order/orderAdd",
+  "/stock/stockAdd",
   setTenant,
   requireSignin,
   authMiddleware,
-  orderAdd
+  stockAdd
 );
 
 router.post(
-  '/order/getOrders',
+  '/stock/stockEntries',
   setTenant,
   requireSignin,
   authMiddleware,
-  orderSelect
+  getStockEntries
 );
 
 router.get(

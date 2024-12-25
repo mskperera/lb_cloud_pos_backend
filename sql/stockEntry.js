@@ -1,40 +1,32 @@
 const { SP_STATUS } = require("../constants");
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
-exports.order_Insert = async (
+exports.stockEntry_Insert = async (
     tenant,
-  customerId,
-  terminalId,
-  sessionId,
-  storeId,
-  overallDiscounts,
-  orderList,
-  paymentList,
-  IsStockSupported,
-  userLogId,
-  utcOffset,
-  pageName,
-  isConfirm
+    supplierId,
+    storeId,
+    stockReceivedDate,
+    amountPaid,
+    remark,
+    supplierBillNo,
+    orderList,
+    userLogId,
+    utcOffset,
+    pageName,
+    isConfirm,
 ) => {
     const {pool}=tenant;
-  console.log("orderList_json", orderList);
 
   const orderList_json = JSON.stringify(orderList);
-  const paymentList_json = JSON.stringify(paymentList);
-  const orderLevelDiscount_json = JSON.stringify(overallDiscounts);
-  console.log("paymentList_json", paymentList_json);
-  // const {isOrderDiscount,orderDiscountTypeId,orderDiscountValue,
-  //   orderDiscountReasonId,orderDiscountRemark}=orderLevelDiscount;
   try {
     const procedureParameters = [
-      customerId,
-      terminalId,
-      sessionId,
+      supplierId,
       storeId,
-      orderLevelDiscount_json,
+      stockReceivedDate,
+     amountPaid,
+    remark,
+    supplierBillNo,
       orderList_json,
-      paymentList_json,
-      IsStockSupported,
       userLogId,
       utcOffset,
       pageName,
@@ -43,19 +35,19 @@ exports.order_Insert = async (
     const procedureOutputParameters = [
       "responseStatus",
       "outputMessage",
-      "orderId",
-      "balanceAmount"
+      "orderId"
     ];
-    const procedureName = "Order_Insert";
+    const procedureName = "StockEntry_Insert";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
       procedureOutputParameters,
       pool
     );
+    console.log("stock_Insert result", result.results);
     // console.log('executeStoredProcedureWithOutputParams',result);
     const { responseStatus, outputMessage } = result.outputValues;
-    console.log("order_Insert result", result);
+ 
     if (responseStatus === SP_STATUS.failed) {
       throw { message: outputMessage };
     }
@@ -67,36 +59,34 @@ exports.order_Insert = async (
   }
 };
 
-exports.order_select = async (
+exports.stockEntry_Select = async (
   tenant,
-  orderId,
-  orderNo,
-  orderFromDate,orderToDate,
-  customerId,
-  customerCode,
-  customerName,
-  terminalId,
-  sessionId,
-  skip,
-  limit,
-  userLogId,
-  utcOffset,
-  pageName
+  stockEntryId,
+      storeId,
+      stockEntryRefNo,
+      fromDate,
+      toDate,
+      supplierId,
+      supplierCode,
+      suppliertName,
+      skip,
+      limit,
+      userLogId,
+      utcOffset,
+      pageName,
 ) => {
   try {
     const {pool}=tenant;
 
-   
-
     const procedureParameters = [
-      orderId,
-      orderNo,
-      orderFromDate,orderToDate,
-      customerId,
-      customerCode,
-    customerName,
-      terminalId,
-      sessionId,
+      stockEntryId,
+      storeId,
+      stockEntryRefNo,
+      fromDate,
+      toDate,
+      supplierId,
+      supplierCode,
+      suppliertName,
       skip,
       limit,
       userLogId,
@@ -108,7 +98,7 @@ exports.order_select = async (
       "outputMessage",
       "totalRows",
     ];
-    const procedureName = "Order_Select";
+    const procedureName = "StockEntry_Select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
