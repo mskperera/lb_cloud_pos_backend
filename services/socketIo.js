@@ -17,11 +17,11 @@ socket.on("connect_error", (err) => {
 });
 
 // Function to send `sendPrint` event and wait for the response
-function sendPrint(printDeskId, printer, receiptData) {
+function sendPrint(printDeskId, printerName,receiptSize, receiptData) {
   return new Promise((resolve, reject) => {
     if (socket.connected) {
       // Emit the sendPrint event
-      socket.emit("sendPrint", { printDeskId, printer, receiptData });
+      socket.emit("sendPrint", { printDeskId, printerName,receiptSize, receiptData });
     //  console.log(`Message sent to 'sendPrint': ${printDeskId}, ${printer}, ${payload}`);
 
       // Listen for the 'printRespond' event once

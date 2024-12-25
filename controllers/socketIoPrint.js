@@ -2,9 +2,9 @@ const { sendPrint } = require("../services/socketIo");
 
 exports.sendPrint_ctrl = async (req, res) => {
   try {
-    const { receiptData, printer, printDeskId } = req.body;
+    const { receiptData, printerName,receiptSize, printDeskId } = req.body;
 
-    const result = await sendPrint(printDeskId, printer, receiptData);
+    const result = await sendPrint(printDeskId, printerName,receiptSize, receiptData);
     res.json({ data: result });
   } catch (err) {
     console.error("Error in sendPrint_ctrl:", err);
