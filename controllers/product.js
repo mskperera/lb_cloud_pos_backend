@@ -1,5 +1,5 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql } = require('../sql/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -160,16 +160,47 @@ exports.product_Update =async (req, res) => {
 
 
 exports.getProducts =async (req, res) => {
-  console.log('products_Select',req.body);
+  // console.log('products_Select',req.body);
   const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
-    categoryId,measurementUnitId,searchByKeyword,limit,skip } = req.body;
+    categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
   const userLogId=1;
   const pageName='p';
 
   try {
-  const result= await product_select_sql(tenant,productId,  productNo, productName,sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,searchByKeyword,
+  const result= await product_select_sql(tenant,productId,  productNo, productName,
+    sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
+    allSearchableFields,searchByKeyword,
+    skip,limit, userLogId,utcOffset,pageName);
+   // console.log('products_Select result',result.results);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+exports.getProductsAllVariations =async (req, res) => {
+  // console.log('products_Select',req.body);
+  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+    categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=1;
+  const pageName='p';
+
+  try {
+  const result= await Product_Select_all_variations_sql(tenant,productId,  productNo, productName,
+    sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
+    allSearchableFields,searchByKeyword,
     skip,limit, userLogId,utcOffset,pageName);
    // console.log('products_Select result',result.results);
       res.json(result);

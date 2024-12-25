@@ -158,6 +158,7 @@ exports.product_select_sql = async (
   productTypeIds,
   productCategoryId,
   measurementUnitId,
+  allSearchableFields=null,
   searchByKeyword,
   skip,
   limit,
@@ -179,6 +180,7 @@ exports.product_select_sql = async (
       storeId,
       productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
       measurementUnitId,
+      allSearchableFields,
       searchByKeyword,
       skip,
       limit,
@@ -209,6 +211,74 @@ exports.product_select_sql = async (
     throw error;
   }
 };
+
+exports.Product_Select_all_variations_sql = async (
+  tenant,
+  productId,
+  productNo,
+  productName,
+  sku,
+  barcode,
+  brandId,
+  storeId,
+  productTypeIds,
+  productCategoryId,
+  measurementUnitId,
+  allSearchableFields=null,
+  searchByKeyword,
+  skip,
+  limit,
+  userLogId,
+  utcOffset,
+  pageName,
+  promptBeforeContinue
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      productId,
+      productNo,
+      productName,
+      sku,
+      barcode,
+      productCategoryId,
+      brandId,
+      storeId,
+      productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
+      measurementUnitId,
+      allSearchableFields,
+      searchByKeyword,
+      skip,
+      limit,
+      userLogId,
+      utcOffset,
+      pageName,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "totalRows",
+    ];
+    const procedureName = "Product_Select_all_variations";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 exports.product_select_extraDetails_sql = async (
   tenant,
