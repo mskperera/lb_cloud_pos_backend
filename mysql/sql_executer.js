@@ -8,6 +8,10 @@ const executeStoredProcedureWithOutputParamsByPool = async (procedureName, input
     const sqlQuery = `CALL ${procedureName}(${inputPlaceholders} ${outputPlaceholders})`;
 
     pool.getConnection((err, connection) => {
+    
+      // Always release the connection, even on error
+      connection.release();
+
       if (err) {
         console.error('Error acquiring connection from pool:', err);
         reject(err);
@@ -23,18 +27,6 @@ const executeStoredProcedureWithOutputParamsByPool = async (procedureName, input
 
         // Create an object to store the output parameter values
         const outputValues = {};
-
-        // // Fetch the output parameter values
-        // outputParameters.forEach((paramName) => {
-        //   connection.query(`SELECT @${paramName} as ${paramName}`, (err, output) => {
-        //     if (err) {
-        //       console.error(`Error fetching the output parameter ${paramName}:`, err);
-        //       return;
-        //     }
-
-        //     outputValues[paramName] = output[0][paramName];
-        //   });
-        // });
 
         // Wait for all output parameter queries to complete
         Promise.all(
@@ -65,6 +57,10 @@ const executeStoredProcedureWithOutputParamsByPool = async (procedureName, input
   });
 };
 
+
+
+
+
 const executeSqlQueryWithOutputParamsByPool = async (sqlQuery, inputParameters, outputParameters, pool) => {
   return new Promise((resolve, reject) => {
     const inputPlaceholders = inputParameters.map(() => '?').join(', ');
@@ -74,6 +70,10 @@ const executeSqlQueryWithOutputParamsByPool = async (sqlQuery, inputParameters, 
     const fullSqlQuery = `${sqlQuery} ${outputPlaceholders}`;
 
     pool.getConnection((err, connection) => {
+    
+      // Always release the connection, even on error
+      connection.release();
+
       if (err) {
         console.error('Error acquiring connection from pool:', err);
         reject(err);
