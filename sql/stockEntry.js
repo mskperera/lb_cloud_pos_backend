@@ -44,6 +44,8 @@ exports.stockEntry_Insert = async (
       procedureOutputParameters,
       pool
     );
+
+    //checkForSQlError(result);
     console.log("stock_Insert result", result.results);
     // console.log('executeStoredProcedureWithOutputParams',result);
     const { responseStatus, outputMessage } = result.outputValues;
@@ -58,6 +60,14 @@ exports.stockEntry_Insert = async (
     throw error;
   }
 };
+
+// const checkForSQlError= (result)=>{
+
+//   const error=result[0][0]?.Level;
+// if(error==="Error"){
+//   console.log('SQl Error: ',result[0][0].Message);
+// }
+// }
 
 exports.stockEntry_Select = async (
   tenant,
@@ -117,18 +127,16 @@ exports.stockEntry_Select = async (
   }
 };
 
-exports.OrderReceipt_SelectByOrderId = async (
+exports.stockEntry_full_Select = async (
     tenant,
-  orderId,
-  userLogId,
-  utcOffset,
-  pageName
+  stockEntryId,
+  userLogId
 ) => {
   try {
     const {pool}=tenant;
-    const procedureParameters = [orderId, userLogId, utcOffset, pageName];
+    const procedureParameters = [stockEntryId, userLogId];
     const procedureOutputParameters = ["responseStatus", "outputMessage"];
-    const procedureName = "OrderReceipt_SelectByOrderId";
+    const procedureName = "StockEntry_full_Select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
@@ -187,7 +195,7 @@ exports.voidOrder_By_OrderId = async (
 };
 
 
-exports.drp_order_voiding_reason_select = async (
+exports.drp_stockEntry_voiding_reason_select = async (
   tenant,
   userLogId,
   utcOffset,
@@ -204,7 +212,7 @@ exports.drp_order_voiding_reason_select = async (
       "responseStatus",
       "outputMessage"
     ];
-    const procedureName = "drp_order_voiding_reason_select";
+    const procedureName = "drp_stockEntry_voiding_reason_select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
@@ -223,38 +231,181 @@ exports.drp_order_voiding_reason_select = async (
   }
 };
 
-exports.OrderFull_Select = async (
+exports.stockEntry_void = async (
   tenant,
-  orderId,
-  orderNo,
-  userLogId
+  stockEntryId,
+  voidingReasonId,
+  userLogId,
+  utcOffset,
+  pageName
 ) => {
+  const {pool}=tenant;
+try {
+  const procedureParameters = [
+    stockEntryId,
+    voidingReasonId,
+    userLogId,
+    utcOffset,
+    pageName
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "StockEntry_void";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+  console.log("StockEntry_void result", result.results);
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
+
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
+  }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
+};
+
+
+
+exports.getStockInfo_sql = async (
+  tenant,
+  inventoryId
+) => {
+try {
+  const {pool}=tenant;
+  const procedureParameters = [inventoryId];
+  const procedureOutputParameters = [];
+  const procedureName = "getStockInfo";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+
+  const { responseStatus, outputMessage } = result.outputValues;
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
+  }
+
+  return result.results[0];
+} catch (error) {
+  throw error;
+}
+};
+
+
+exports.stock_adjust_sql = async (
+  tenant,
+  stockBatchId,
+  adjustedQty,
+  adjustmentTypeId,
+  adjustmentReasonId,
+  adjustmentReasonOtherRemark,
+  userLogId,
+  utcOffset,
+  pageName
+) => {
+  const {pool}=tenant;
+try {
+  const procedureParameters = [
+    stockBatchId,
+  adjustedQty,
+  adjustmentTypeId,
+  adjustmentReasonId,
+  adjustmentReasonOtherRemark,
+  userLogId,
+  utcOffset,
+  pageName
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "stock_adjust";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+  console.log("stock_adjust result", result.results);
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
+
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
+  }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
+};
+
+
+exports.get_stock_adjustments_sql = async (
+  tenant,
+  stockBatchId
+) => {
+  const {pool}=tenant;
+try {
+  const procedureParameters = [
+    stockBatchId
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "get_stock_adjustments";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
+
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
+  }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
+};
+
+
+exports.drp_adjustmentReasons_select_sql = async (
+  tenant,
+  adjustmentTypeId
+) => {
+  const { pool } = tenant;
   try {
-    const {pool}=tenant;
-
-   
-
     const procedureParameters = [
-      orderId,
-      orderNo,
-      userLogId
+      adjustmentTypeId
     ];
-    const procedureOutputParameters = [
-      "responseStatus",
-      "outputMessage"
-    ];
-    const procedureName = "OrderFull_Select";
+    const procedureOutputParameters = [];
+    const procedureName = "drp_adjustmentReasons_select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
       procedureOutputParameters,
       pool
     );
-
-    const { responseStatus, outputMessage } = result.outputValues;
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
 
     return result;
   } catch (error) {
@@ -262,70 +413,125 @@ exports.OrderFull_Select = async (
   }
 };
 
-exports.checkNewOrderReciptAvailability_sql = async (
+
+exports.update_price_cost_sql = async (
   tenant,
-terminalId
+  stockBatchId,
+  newUnitPrice,
+  newUnitCost,
+  changeReason,
+  userLogId,
+  utcOffset,
+  pageName
 ) => {
-  try {
-    const {pool}=tenant;
+  const {pool}=tenant;
+try {
 
-  
-    const procedureParameters = [
-      terminalId
-    ];
-    const procedureOutputParameters = [
-      "responseStatus",
-      "outputMessage"
-    ];
-    const procedureName = "external_checkNewOrderReciptAvailability";
-    const result = await executeStoredProcedureWithOutputParamsByPool(
-      procedureName,
-      procedureParameters,
-      procedureOutputParameters,
-      pool
-    );
+  const procedureParameters = [
+    stockBatchId,
+    newUnitPrice,
+    newUnitCost,
+    changeReason,
+  userLogId,
+  utcOffset,
+  pageName
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "update_price_cost";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+  console.log("update_price_cost result", result.results);
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
 
-    const { responseStatus, outputMessage } = result.outputValues;
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
-
-    return result;
-  } catch (error) {
-    throw error;
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
   }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
 };
 
-exports.clearPrintingData_sql = async (
+
+
+exports.get_price_change_log_sql = async (
   tenant,
-terminalId
+  stockBatchId
 ) => {
-  try {
-    const {pool}=tenant;
+  const {pool}=tenant;
+try {
+  const procedureParameters = [
+    stockBatchId
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "get_price_change_log";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
 
-  
-    const procedureParameters = [
-      terminalId
-    ];
-    const procedureOutputParameters = [
-      "responseStatus",
-      "outputMessage"
-    ];
-    const procedureName = "external_clearPrintingData";
-    const result = await executeStoredProcedureWithOutputParamsByPool(
-      procedureName,
-      procedureParameters,
-      procedureOutputParameters,
-      pool
-    );
-
-    const { responseStatus, outputMessage } = result.outputValues;
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
-
-    return result;
-  } catch (error) {
-    throw error;
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
   }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
+};
+
+
+
+exports.releaseStockBatch_sql = async (
+  tenant,
+  stockBatchId
+) => {
+  const {pool}=tenant;
+try {
+
+  const procedureParameters = [
+    stockBatchId
+  ];
+  const procedureOutputParameters = [
+    "responseStatus",
+    "outputMessage"
+  ];
+  const procedureName = "releaseStockBatch";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+
+  // console.log('executeStoredProcedureWithOutputParams',result);
+  const { responseStatus, outputMessage } = result.outputValues;
+
+  if (responseStatus === SP_STATUS.failed) {
+    throw { message: outputMessage };
+  }
+
+  return result;
+} catch (error) {
+  console.log("error", error);
+  throw error;
+}
 };

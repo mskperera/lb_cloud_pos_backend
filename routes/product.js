@@ -11,7 +11,9 @@ const {
   getNonSerializedItems,
   getStores_ctrl,
   getVariationTypes_drp,
-  getProductsAllVariations
+  getProductsAllVariations,
+  getProductsPosMenu,
+  getVariationProductDetails_ctrl
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
@@ -52,6 +54,23 @@ router.post(
   getProducts
 );
 
+router.post(
+  '/product/getProductsPosMenu',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+
+  getProductsPosMenu
+);
+
+router.post(
+  '/product/getVariationProductDetails',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+
+  getVariationProductDetails_ctrl
+);
 
 router.post(
   '/product/productsAllVariations',

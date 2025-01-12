@@ -1,5 +1,5 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql } = require('../sql/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -24,7 +24,8 @@ exports.product_Add =async (req, res) => {
     unitPrice,
     sku,
     barcode,
-    reorderLevel
+    reorderLevel,
+    isExpiringProduct
   } = req.body;
 
 console.log('body:',req.body);
@@ -35,7 +36,7 @@ console.log('body:',req.body);
     tenant,
     tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
     comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-    brandId,costPrice,unitPrice,sku,barcode,reorderLevel);
+    brandId,costPrice,unitPrice,sku,barcode,reorderLevel,isExpiringProduct);
 
 
 if(result.error){
@@ -84,7 +85,8 @@ exports.product_Update =async (req, res) => {
     unitPrice,
     sku,
     barcode,
-    reorderLevel
+    reorderLevel,
+    isExpiringProduct
   } = req.body;
 
   const tenant=req.tenant;
@@ -120,11 +122,7 @@ exports.product_Update =async (req, res) => {
     sku,
     barcode,
     reorderLevel,
-    saveType,
-    userLogId,
-    utcOffset,
-    pageName,
-    promptBeforeContinue
+    isExpiringProduct
     );
 
 
@@ -187,6 +185,56 @@ exports.getProducts =async (req, res) => {
   });
 }
 };
+
+
+exports.getProductsPosMenu =async (req, res) => {
+  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+    categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=1;
+  const pageName='p';
+
+  try {
+  const result= await product_select_pos_menu_sql(tenant,productId,  productNo, productName,
+    sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
+    allSearchableFields,searchByKeyword,
+    skip,limit, userLogId,utcOffset,pageName);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name,
+      stack: err.stack
+    }
+  });
+}
+};
+
+exports.getVariationProductDetails_ctrl =async (req, res) => {
+  const {productId,storeId } = req.body;
+  const tenant=req.tenant;
+
+  try {
+  const result= await getVariationProductDetails_sql(tenant,productId,storeId);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name,
+      stack: err.stack
+    }
+  });
+}
+};
+
+
 
 exports.getProductsAllVariations =async (req, res) => {
   // console.log('products_Select',req.body);

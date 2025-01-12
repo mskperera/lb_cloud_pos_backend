@@ -4,7 +4,7 @@ const {orderAdd, orderSelect, getOrderReceiptByOrderId,
   voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
-const { stockAdd, getStockEntries } = require("../controllers/stockEntry");
+const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl } = require("../controllers/stockEntry");
 
 router.post(
   "/stock/stockAdd",
@@ -23,44 +23,83 @@ router.post(
 );
 
 router.get(
-  '/order/getReceipt/:orderId',
+  '/stock/getStockEntryFull',
   setTenant,
   requireSignin,
   authMiddleware,
-  getOrderReceiptByOrderId
+  getStockEntryFullbyStockEntryId
 );
 
 router.get(
-  '/order/getReceiptExt/:orderId',
-  setTenant,
-
-  getOrderReceiptByOrderId
-);
-
-
-router.post(
-  '/order/voidOrder',
+  '/stock/stockEntry_void',
   setTenant,
   requireSignin,
   authMiddleware,
-  voidOrderByOrderId
+  stockEntryVoid
 );
 
 router.get(
-  '/dropdown/getOrderVoidingReason_dropdown',
+  '/dropdown/getDrpdownStockEntryVoidingReason',
   setTenant,
   requireSignin,
   authMiddleware,
-  getOrderVoidingReason_dropdown
+  getStockEntryVoidingReason_dropdown
+);
+
+router.get(
+  '/stock/getStockInfo',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getStockInfo_ctrl
 );
 
 router.post(
-  '/order/getOrderFull',
+  '/stock/stockAdjust',
   setTenant,
   requireSignin,
   authMiddleware,
-  getOrderFull_ctrl
+  stockAdjust_ctrl
 );
 
+router.get(
+  '/stock/getStockAdjustments',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getStockAdjustments_ctrl
+);
+
+router.get(
+  `/dropdown/getAdjustmentReasons`,
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getAdjustmentReasons_dropdown_ctrl
+);
+
+router.post(
+  '/stock/updatePriceCost',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  update_price_cost_ctrl
+);
+
+router.get(
+  `/stock/getPriceChange`,
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getPriceChange_ctrl
+);
+
+router.post(
+  '/stock/releaseStockBatch',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  releaseStockBatch_ctrl
+);
 
 module.exports = router;

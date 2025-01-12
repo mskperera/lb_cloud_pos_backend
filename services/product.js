@@ -6,7 +6,7 @@ exports.productAdd_srv =async (
   tenant,
   tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
   comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-  brandId,costPrice,unitPrice,sku,barcode,reorderLevel) => {
+  brandId,costPrice,unitPrice,sku,barcode,reorderLevel,isExpiringProduct) => {
 
   if (!productNo) {
     return {
@@ -63,6 +63,12 @@ exports.productAdd_srv =async (
     };
   }
 
+  if (isExpiringProduct===null || isExpiringProduct==="") {
+    return {
+      error: { message: "isExpiringProduct is Required" },
+    };
+  }
+
   if (costPrice===null || costPrice==='') {
     return {
       error: {message:"costPrice is Required"},
@@ -109,6 +115,7 @@ if(productTypeId!==2){
       sku,
       barcode,
       reorderLevel,
+      isExpiringProduct,
       saveType,
       userLogId,
       utcOffset,
@@ -146,7 +153,8 @@ exports.productUpdate_srv = async (
   unitPrice,
   sku,
   barcode,
-  reorderLevel
+  reorderLevel,
+  isExpiringProduct
 ) => {
   const utcOffset = "5:30";
   const userLogId = 1;
@@ -208,6 +216,14 @@ exports.productUpdate_srv = async (
     };
   }
 
+  
+  if (isExpiringProduct === null || isExpiringProduct === "") {
+    return {
+      error: { message: "isExpiringProduct is Required.." },
+    };
+  }
+  
+
   // if (costPrice === null || costPrice === "") {
   //   return {
   //     error: { message: "costPrice is Required" },
@@ -246,6 +262,7 @@ exports.productUpdate_srv = async (
       sku,
       barcode,
       reorderLevel,
+      isExpiringProduct,
       saveType,
       userLogId,
       utcOffset,
