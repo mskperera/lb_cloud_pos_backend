@@ -278,11 +278,12 @@ try {
 
 exports.getStockInfo_sql = async (
   tenant,
-  inventoryId
+  inventoryId,
+  showZeroStockQtyData
 ) => {
 try {
   const {pool}=tenant;
-  const procedureParameters = [inventoryId];
+  const procedureParameters = [inventoryId,showZeroStockQtyData];
   const procedureOutputParameters = [];
   const procedureName = "getStockInfo";
   const result = await executeStoredProcedureWithOutputParamsByPool(
@@ -502,13 +503,15 @@ try {
 
 exports.releaseStockBatch_sql = async (
   tenant,
-  stockBatchId
+  stockBatchId,
+  stopRelease
 ) => {
   const {pool}=tenant;
 try {
 
   const procedureParameters = [
-    stockBatchId
+    stockBatchId,
+    stopRelease
   ];
   const procedureOutputParameters = [
     "responseStatus",

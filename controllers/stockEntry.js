@@ -246,16 +246,19 @@ exports.stockEntryVoid =async (req, res) => {
 
 exports.getStockInfo_ctrl =async (req, res) => {
 
-  const {inventoryId } = req.query;
+  const {inventoryId,showZeroStockQtyData } = req.query;
  
   const tenant=req.tenant;
   const userLogId=1;
-  console.log('inventoryId',inventoryId)
+
+const showZeroStockQtyDataBool=showZeroStockQtyData==="true"?true:false;
+
+  console.log('showZeroStockQtyData',showZeroStockQtyDataBool)
 
 
   try {
 
-  const result= await getStockInfo_sql(tenant,inventoryId);
+  const result= await getStockInfo_sql(tenant,inventoryId,showZeroStockQtyDataBool);
 
       res.json(result);
 
@@ -516,7 +519,8 @@ exports.getPriceChange_ctrl =async (req, res) => {
 exports.releaseStockBatch_ctrl =async (req, res) => {
 
   const {
-    stockBatchId
+    stockBatchId,
+    stopRelease
    } = req.body;
 
   const tenant=req.tenant;
@@ -528,9 +532,16 @@ exports.releaseStockBatch_ctrl =async (req, res) => {
       });
     }
 
+    if (stopRelease===null || stopRelease==="") {
+      return res.status(422).json({
+        error: {message:"stopRelease status is Required"},
+      });
+    }
+
   const result= await releaseStockBatch_sql(
     tenant,
-    stockBatchId
+    stockBatchId,
+    stopRelease
   );
     
     res.json(result);
