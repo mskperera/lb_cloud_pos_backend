@@ -1,15 +1,14 @@
 const { SP_STATUS } = require("../constants");
 const {
-  customer_insert_update,
-  customer_select,
-  customer_delete,
+  contact_insert_update,
+  contact_select,
+  contact_delete,
   drp_contactType_select_sql,
-  drp_contact_select,
   drp_supplier_select,
   drp_customer_select,
 } = require("../sql/customer");
 
-exports.addCustomer = async (req, res) => {
+exports.addContact = async (req, res) => {
   const {contactTypeId, contactName, email, mobile, tel, remark } =
     req.body;
 
@@ -43,7 +42,7 @@ exports.addCustomer = async (req, res) => {
     }
 
 
-    const result = await customer_insert_update(
+    const result = await contact_insert_update(
       tenant,
       null,
       contactTypeId,
@@ -77,7 +76,7 @@ exports.addCustomer = async (req, res) => {
   }
 };
 
-exports.updateCustomer = async (req, res) => {
+exports.updateContact = async (req, res) => {
   const { contactId } = req.params;
   const tenant = req.tenant;
   console.log("customerid", contactId);
@@ -118,7 +117,7 @@ exports.updateCustomer = async (req, res) => {
     }
 
 
-    const result = await customer_insert_update(
+    const result = await contact_insert_update(
       tenant,
       tableId,
       contactTypeId,
@@ -147,10 +146,10 @@ exports.updateCustomer = async (req, res) => {
   }
 };
 
-exports.selectCustomer = async (req, res) => {
+exports.selectContact = async (req, res) => {
   const {
     contactId,
-    contactTypeId,
+    contactTypeIds,
     contactCode,
     contactName,
     email,
@@ -160,18 +159,27 @@ exports.selectCustomer = async (req, res) => {
     skip,
     limit,
   } = req.body;
-  console.log("selectCustomer req.body: ", req.body);
+  console.log("selectContact req.body: ", req.body);
+  
   const tenant = req.tenant;
   const utcOffset = "5:30";
   const userLogId = 1;
   const pageName = "p";
   const promptBeforeContinue = false;
 
+if (!Array.isArray(contactTypeIds)) {
+  return res.status(400).json({
+    error: {
+      message: "Invalid data type: contactTypeIds should be an array.",
+    },
+  });
+}
+
   try {
-    const result = await customer_select(
+    const result = await contact_select(
       tenant,
       contactId,
-      contactTypeId,
+      contactTypeIds,
       contactCode,
       contactName,
       email,
@@ -199,7 +207,7 @@ exports.selectCustomer = async (req, res) => {
   }
 };
 
-exports.deleteCustomer = async (req, res) => {
+exports.deleteContact = async (req, res) => {
   const { contactId, isConfirm } = req.query;
 
   const tenant = req.tenant;
@@ -209,7 +217,7 @@ exports.deleteCustomer = async (req, res) => {
   const pageName = "p";
 
   try {
-    const result = await customer_delete(
+    const result = await contact_delete(
       tenant,
       contactId,
       userLogId,

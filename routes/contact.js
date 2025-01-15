@@ -1,22 +1,22 @@
 const express = require("express");
  const router = express.Router();
-const {  selectCustomer, deleteCustomer, addCustomer, updateCustomer, getContactType_dropdown, 
-  getSupplier_dropdown, getCustomer_dropdown } = require("../controllers/customer");
+const {  selectContact, deleteContact, addContact, updateContact, getContactType_dropdown, 
+  getSupplier_dropdown, getCustomer_dropdown } = require("../controllers/contact");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
 
- router.post("/customer/customers",setTenant, selectCustomer);
+ router.post("/contacts/getContacts",setTenant, selectContact);
 
-router.post("/customer/add",setTenant, addCustomer);
-router.put("/customer/update/:contactId", setTenant,  requireSignin,
-authMiddleware,updateCustomer);
+router.post("/contacts/add",setTenant, addContact);
+router.put("/contacts/update/:contactId", setTenant,  requireSignin,
+authMiddleware,updateContact);
 
 router.delete(
-  "/customer/delete",
+  "/contacts/delete",
   setTenant,
   requireSignin,
   authMiddleware,
-  deleteCustomer
+  deleteContact
 );
 
 router.get(
