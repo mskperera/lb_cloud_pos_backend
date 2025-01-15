@@ -4,7 +4,7 @@ const {orderAdd, orderSelect, getOrderReceiptByOrderId,
   voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
-const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl } = require("../controllers/stockEntry");
+const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl, getInventoryTransactionHistory_ctrl } = require("../controllers/stockEntry");
 
 router.post(
   "/stock/stockAdd",
@@ -101,5 +101,16 @@ router.post(
   authMiddleware,
   releaseStockBatch_ctrl
 );
+
+
+
+router.post(
+  '/stock/getInventoryTransactionHistory',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getInventoryTransactionHistory_ctrl
+);
+
 
 module.exports = router;

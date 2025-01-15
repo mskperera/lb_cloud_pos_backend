@@ -538,3 +538,36 @@ try {
   throw error;
 }
 };
+
+
+exports.get_inventory_transation_history_sql = async (
+  tenant,
+  inventoryId,
+  storeId,
+  skip,
+  limit
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+  inventoryId,
+  storeId,
+  skip,limit
+    ];
+    const procedureOutputParameters = [
+      "totalRows",
+    ];
+    const procedureName = "get_inventory_transaction_history";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+

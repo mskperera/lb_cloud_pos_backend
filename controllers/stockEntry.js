@@ -1,5 +1,5 @@
 const { voidOrder_By_OrderId, OrderFull_Select } = require('../sql/order');
-const { stockEntry_Insert, stockEntry_Select, stockEntry_full_Select, stockEntry_void, drp_stockEntry_voiding_reason_select, getStockInfo_sql, stock_adjust_sql, get_stock_adjustments_sql, drp_adjustmentReasons_select_sql, update_price_cost_sql, get_price_change_log_sql, releaseStockBatch_sql } = require('../sql/stockEntry');
+const { stockEntry_Insert, stockEntry_Select, stockEntry_full_Select, stockEntry_void, drp_stockEntry_voiding_reason_select, getStockInfo_sql, stock_adjust_sql, get_stock_adjustments_sql, drp_adjustmentReasons_select_sql, update_price_cost_sql, get_price_change_log_sql, releaseStockBatch_sql, get_inventory_transation_history_sql } = require('../sql/stockEntry');
 
 exports.stockAdd = async (req, res) => {
   const {
@@ -558,3 +558,24 @@ exports.releaseStockBatch_ctrl =async (req, res) => {
 }
 };
 
+
+exports.getInventoryTransactionHistory_ctrl =async (req, res) => {
+  // console.log('products_Select',req.body);
+  const {inventoryId,storeId,limit,skip } = req.body;
+  const tenant=req.tenant;
+
+  try {
+  const result= await get_inventory_transation_history_sql(tenant,inventoryId,storeId,skip,limit);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
