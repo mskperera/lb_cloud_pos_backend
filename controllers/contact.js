@@ -1,4 +1,4 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS}=require('../constants/constants');
 const {
   contact_insert_update,
   contact_select,

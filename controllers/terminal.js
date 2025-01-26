@@ -1,12 +1,5 @@
-const {
-  sessionStart_srv,
-  sessionEnd_srv,
-  getSessionEndDetails_srv,
-} = require("../services/session");
-const { drp_teminallByUserId, getAssignedTerminalsByUserId_sql,getTerminalDetailslByTerminalId_sql, getPrintdesk_select_by_terminalId_sql, getFrontendIdByTerminalId_sql } = require("../sql/terminal");
-const { stringToBoolean } = require("../utils/utils");
 
-
+const { drp_teminallByUserId, getAssignedTerminalsByUserId_sql,getTerminalDetailslByTerminalId_sql, getFrontendIdByTerminalId_sql } = require("../sql/terminal");
 
 exports.getTeminallByUserId_dropdown_ctrl =async (req, res) => {
 

@@ -1,12 +1,14 @@
+
 const {
   mainDbConnection_pool,
   mainDbConnection_error_handler_pool,
 } = require("../mysql/main_db_connection");
-const { SP_STATUS } = require("../constants");
 const {
   executeStoredProcedureWithOutputParamsByPool,
   executeSqlQueryWithOutputParamsByPool,
 } = require("../mysql/sql_executer");
+
+const {SP_STATUS}=require('../constants/constants');
 
 exports.get_tenantCredentials_by_accName = async (accName) => {
   try {

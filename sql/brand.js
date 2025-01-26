@@ -1,6 +1,5 @@
-const { SP_STATUS } = require("../constants");
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
-
+const {SP_STATUS}=require('../constants/constants');
 
 
 exports.drp_brand_select_sql = async (

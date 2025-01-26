@@ -1,4 +1,4 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
 exports.stockEntry_Insert = async (

@@ -1,8 +1,8 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS,CONSOLE_TEXT_COLORS}=require('../constants/constants');
 const {
   executeStoredProcedureWithOutputParamsByPool,
 } = require("../mysql/sql_executer");
-const { CONSOLE_TEXT_COLORS } = require("../constants");
+
 const { consoleSuccessText, consoleErrorText, consoleExceptionText } =
   CONSOLE_TEXT_COLORS;
 
