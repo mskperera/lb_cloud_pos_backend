@@ -34,28 +34,28 @@ exports.get_tenantCredentials_by_accName = async (accName) => {
   }
 };
 
-exports.get_connectionDetails_by_tenantId = async (tenantId) => {
-  try {
-    const procedureParameters = [tenantId];
-    const procedureOutputParameters = ["responseStatus", "outputMessage"];
-    const procedureName = "get_connectionDetails_by_tenantId";
-    const result = await executeStoredProcedureWithOutputParamsByPool(
-      procedureName,
-      procedureParameters,
-      procedureOutputParameters,
-      mainDbConnection_pool
-    );
-    const { responseStatus, outputMessage } = result.outputValues;
+// exports.get_connectionDetails_by_tenantId = async (tenantId) => {
+//   try {
+//     const procedureParameters = [tenantId];
+//     const procedureOutputParameters = ["responseStatus", "outputMessage"];
+//     const procedureName = "get_connectionDetails_by_tenantId";
+//     const result = await executeStoredProcedureWithOutputParamsByPool(
+//       procedureName,
+//       procedureParameters,
+//       procedureOutputParameters,
+//       mainDbConnection_pool
+//     );
+//     const { responseStatus, outputMessage } = result.outputValues;
 
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
+//     if (responseStatus === SP_STATUS.failed) {
+//       throw { message: outputMessage };
+//     }
 
-    return result.results[0][0];
-  } catch (error) {
-    throw error;
-  }
-};
+//     return result.results[0][0];
+//   } catch (error) {
+//     throw error;
+//   }
+// };
 
 exports.error_log_insert = async (user, tenantId, activity, errorLog) => {
   try {

@@ -158,7 +158,7 @@ exports.product_Update =async (req, res) => {
 
 
 exports.getProducts =async (req, res) => {
-  // console.log('products_Select',req.body);
+   console.log('products_Select',req.body);
   const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;

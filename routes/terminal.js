@@ -1,9 +1,9 @@
 const express = require("express");
  const router = express.Router();
-const { sessionEnd, getSessionEndDetails, sessionStart_ctrl, sessionEnd_ctrl, getSessionEndDetails_ctrl, getDrpSession_ctrl } = require("../controllers/session");
+const {  sessionStart_ctrl, sessionEnd_ctrl, getSessionEndDetails_ctrl, getDrpSession_ctrl } = require("../controllers/session");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
-const { getTeminallByUserId_dropdown_ctrl, getAssignedTerminalsByUserId_ctrl ,getTerminalDetailslByTerminalId_ctrl, getFrontendIdByTerminalId_ctrl} = require("../controllers/terminal");
+const { getTeminallByUserId_dropdown_ctrl ,getTerminalDetailslByTerminalId_ctrl, getFrontendIdByTerminalId_ctrl} = require("../controllers/terminal");
 
 
  router.post("/session/start",setTenant, sessionStart_ctrl);
@@ -17,13 +17,6 @@ const { getTeminallByUserId_dropdown_ctrl, getAssignedTerminalsByUserId_ctrl ,ge
     getTeminallByUserId_dropdown_ctrl
   );
   
-  router.get(
-    '/terminal/getAssignedTerminalsByUserId',
-    setTenant,
-    // requireSignin,
-    // authMiddleware,
-    getAssignedTerminalsByUserId_ctrl
-  );
  
   router.get(
     '/terminal/getTerminalDetailslByTerminalId',

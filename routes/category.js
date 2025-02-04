@@ -3,7 +3,7 @@ const router = express.Router();
 
 const { setTenant } = require('../middlewares/tenancyManage');
 const { requireSignin,authMiddleware } = require('../middlewares/auth');
-const {  getRegistermMenuProductCategory, getCategory_dropdown } = require('../controllers/category');
+const {  getRegistermMenuProductCategory, getCategory_dropdown, getProductCategories, addCategory, deleteCategory, updateCategory } = require('../controllers/category');
 
 
 router.post(
@@ -14,11 +14,44 @@ router.post(
   getRegistermMenuProductCategory
 );
 router.get(
-  '/dropdown/getCategories',
+  '/categories/dropdown',
   setTenant,
   requireSignin,
   authMiddleware,
   getCategory_dropdown
 );
+
+router.post(
+  '/categories/get',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  getProductCategories
+);
+
+router.post(
+  '/categories',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  addCategory
+);
+
+router.put(
+  '/categories/:categoryId',
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  updateCategory
+);
+
+router.delete(
+  "/categories/:categoryId",
+  setTenant,
+  requireSignin,
+  authMiddleware,
+  deleteCategory
+);
+
 
 module.exports = router;

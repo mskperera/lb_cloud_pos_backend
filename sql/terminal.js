@@ -42,48 +42,6 @@ exports.drp_teminallByUserId = async (
 
 
 
-exports.getAssignedTerminalsByUserId_sql = async (
-  tenant,
-  userId
-) => {
-  const functionName = "getAssignedTerminalsByUserId_sql()";
-  try {
-    const { pool } = tenant;
-    const procedureParameters = [
-      userId
-    ];
-    const procedureOutputParameters = [
-      "responseStatus",
-      "outputMessage"
-    ];
-    const procedureName = "getAssignedTerminalsByUserId";
-    const result = await executeStoredProcedureWithOutputParamsByPool(
-      procedureName,
-      procedureParameters,
-      procedureOutputParameters,
-      pool
-    );
-
-    const { responseStatus, outputMessage } = result.outputValues;
-    if (responseStatus === SP_STATUS.failed) {
-      console.log(
-        consoleExceptionText,
-        `${functionName} -> exception:`,
-        outputMessage
-      );
-      return { exception: { message: outputMessage } };
-    }
-
-    const message = outputMessage;
-    console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
-    return {success:{message} ,records: result.results[0] };
-  } catch (error) {
-    console.error(consoleErrorText, `${functionName} -> error :`, error);
-    throw error;
-  }
-};
-
-
 exports.getTerminalDetailslByTerminalId_sql = async (
   tenant,
   terminalId

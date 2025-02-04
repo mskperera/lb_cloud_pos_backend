@@ -3,21 +3,18 @@ const {SP_STATUS}=require('../constants/constants');
 
 exports.category_select_sql = async (
   tenant,
+  categoryId,
   skip,
   limit,
-  userLogId,
-  utcOffset,
-  pageName,
-  promptBeforeContinue
+  userLogId
 ) => {
   const { pool } = tenant;
   try {
     const procedureParameters = [
+      categoryId,
       skip,
       limit,
-      userLogId,
-      utcOffset,
-      pageName,
+      userLogId
     ];
     const procedureOutputParameters = [
       "responseStatus",
@@ -43,6 +40,72 @@ exports.category_select_sql = async (
   }
 };
   
+exports.category_insert_update_sql = async (tenant,
+  tableId,
+  categoryName,
+  saveType,
+  userLogId,
+) => {
+  try {
+
+    const {pool}=tenant;
+    const procedureParameters = [
+      tableId,
+      categoryName,
+      saveType,
+      userLogId,
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "categoryId_out"
+    ];
+    const procedureName = "category_insert_update";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+    
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.category_delete_sql = async (tenant,
+  categoryId,
+  userLogId
+) => {
+  try {
+    const {pool}=tenant;
+    const procedureParameters = [
+      categoryId,
+      userLogId
+    ];
+    const procedureOutputParameters = ["responseStatus", "outputMessage"];
+    const procedureName = "category_delete";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 exports.category_register_menu_select_sql = async (
   tenant,
   skip,

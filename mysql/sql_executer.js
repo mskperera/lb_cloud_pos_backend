@@ -8,9 +8,10 @@ const executeStoredProcedureWithOutputParamsByPool = async (procedureName, input
     const sqlQuery = `CALL ${procedureName}(${inputPlaceholders} ${outputPlaceholders})`;
 
     pool.getConnection((err, connection) => {
-    
+   
       // Always release the connection, even on error
       connection.release();
+      //releaseConnectionSafely(connection);
 
       if (err) {
         console.error('Error acquiring connection from pool:', err);
@@ -58,7 +59,14 @@ const executeStoredProcedureWithOutputParamsByPool = async (procedureName, input
 };
 
 
-
+const releaseConnectionSafely = (connection) => {
+  if (connection && connection.state !== 'disconnected') {
+    connection.release();
+    console.log('Connection released');
+  } else {
+    console.log('Connection already closed or not initialized');
+  }
+};
 
 
 const executeSqlQueryWithOutputParamsByPool = async (sqlQuery, inputParameters, outputParameters, pool) => {
