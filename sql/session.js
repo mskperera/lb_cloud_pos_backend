@@ -203,6 +203,7 @@ exports.sessionEndDetails_Select_sql = async (
 exports.drp_session_select_sql = async (
   tenant,
   descOrder,
+  storeId,
   userLogId,
   utcOffset,
   pageName
@@ -211,6 +212,7 @@ exports.drp_session_select_sql = async (
   try {
     const procedureParameters = [
       descOrder,
+      storeId,
       userLogId,
       utcOffset,
       pageName,
