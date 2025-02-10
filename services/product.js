@@ -6,7 +6,7 @@ exports.productAdd_srv =async (
   tenant,
   tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
   comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-  brandId,costPrice,unitPrice,sku,barcode,reorderLevel,isExpiringProduct) => {
+  brandId,unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct) => {
 
   if (!productNo) {
     return {
@@ -69,16 +69,23 @@ exports.productAdd_srv =async (
     };
   }
 
-  if (costPrice===null || costPrice==='') {
+
+if(productTypeId!==2){
+  if (!unitCost) {
     return {
-      error: {message:"costPrice is Required"},
+      error: {message:"unitCost is Required"},
     };
   }
 
-if(productTypeId!==2){
   if (!unitPrice) {
     return {
       error: {message:"unitPrice is Required"},
+    };
+  }
+
+  if (!taxPerc) {
+    return {
+      error: {message:"taxPerc is Required"},
     };
   }
 }
@@ -110,8 +117,7 @@ if(productTypeId!==2){
     isStockTracked,
     isProductItem,
       brandId,
-     // costPrice,
-      unitPrice,
+      unitCost,unitPrice,taxPerc,
       sku,
       barcode,
       reorderLevel,
@@ -149,8 +155,7 @@ exports.productUpdate_srv = async (
   isStockTracked,
   isProductItem,
   brandId,
- // costPrice,
-  unitPrice,
+  unitCost,unitPrice,taxPerc,
   sku,
   barcode,
   reorderLevel,
@@ -231,11 +236,24 @@ exports.productUpdate_srv = async (
   // }
 
   if(productTypeId!==2){
+    if (!unitCost) {
+      return {
+        error: {message:"unitCost is Required"},
+      };
+    }
+
     if (!unitPrice) {
       return {
         error: {message:"unitPrice is Required"},
       };
     }
+
+    if (!taxPerc) {
+      return {
+        error: {message:"taxPerc is Required"},
+      };
+    }
+
   }
 
   try {
@@ -257,8 +275,7 @@ exports.productUpdate_srv = async (
       isStockTracked,
       isProductItem,
       brandId,
-     // costPrice,
-      unitPrice,
+      unitCost,unitPrice,taxPerc,
       sku,
       barcode,
       reorderLevel,

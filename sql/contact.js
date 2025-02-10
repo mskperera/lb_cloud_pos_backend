@@ -1,7 +1,7 @@
 const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
-exports.contact_insert_update = async (tenant,
+exports.contact_insert_update_sql = async (tenant,
   tableId,
   contactTypeId,
   contactName,

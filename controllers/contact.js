@@ -1,4 +1,5 @@
 const {SP_STATUS}=require('../constants/constants');
+const { contactAdd_srv, contactUpdate_srv } = require('../services/contact');
 const {
   contact_insert_update,
   contact_select,
@@ -6,43 +7,18 @@ const {
   drp_contactType_select_sql,
   drp_supplier_select,
   drp_customer_select,
-} = require("../sql/customer");
+} = require("../sql/contact");
 
-exports.addContact = async (req, res) => {
-  const {contactTypeId, contactName, email, mobile, tel, remark } =
-    req.body;
+exports.addContact_ctrl = async (req, res) => {
 
+  const {contactTypeId, contactName, email, mobile, tel, remark } = req.body;
+ 
   const tenant = req.tenant;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
-  const isConfirm = true;
-  const saveType = "I";
 
   try {
 
-    
-    if (!contactTypeId) {
-      return res.status(422).json({
-        error: {message:"contactTypeId is Required"},
-      });
-    }
-
-    if (!contactName) {
-      return res.status(422).json({
-        error: {message:"contactName is Required"},
-      });
-    }
-
-
-    if (!mobile) {
-      return res.status(422).json({
-        error: {message:"mobile is Required"},
-      });
-    }
-
-
-    const result = await contact_insert_update(
+  console.log('add contactTypeId',contactTypeId);
+    const result = await contactAdd_srv(
       tenant,
       null,
       contactTypeId,
@@ -50,13 +26,9 @@ exports.addContact = async (req, res) => {
       email,
       mobile,
       tel,
-      remark,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm
+      remark
     );
+
     if(result.error){
       return res.status(422).json({
         error:result.error
@@ -76,75 +48,47 @@ exports.addContact = async (req, res) => {
   }
 };
 
-exports.updateContact = async (req, res) => {
-  const { contactId } = req.params;
+
+exports.updateContact_ctrl = async (req, res) => {
+
+    const { contactId } = req.params;
+    const {contactTypeId, contactName, email, mobile, tel, remark } =req.body;
+
   const tenant = req.tenant;
-  console.log("customerid", contactId);
-  const {contactTypeId, contactName, email, mobile, tel, remark } = req.body;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
-  const tableId = contactId;
-  const saveType = "U";
-  const isConfirm = true;
 
   try {
 
-    if (!contactId) {
-      return res.status(422).json({
-        error: {message:"contactId is Required"},
-      });
-    }
-
-
-    if (!contactTypeId) {
-      return res.status(422).json({
-        error: {message:"contactTypeId is Required"},
-      });
-    }
-
-    if (!contactName) {
-      return res.status(422).json({
-        error: {message:"contactName is Required"},
-      });
-    }
-
-
-    if (!mobile) {
-      return res.status(422).json({
-        error: {message:"mobile is Required"},
-      });
-    }
-
-
-    const result = await contact_insert_update(
+    const result = await contactUpdate_srv(
       tenant,
-      tableId,
+      contactId,
       contactTypeId,
       contactName,
       email,
       mobile,
       tel,
-      remark,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm
+      remark
     );
 
-    res.status(200).json(result);
+    if(result.error){
+      return res.status(422).json({
+        error:result.error
+      });
+  }
+
+    res.status(201).json(result);
   } catch (err) {
     console.log("Errori: ", err);
     return res.status(400).json({
       error: {
         message: err.message,
-        name: err.name,
+        name: err.name, // include other properties if needed
         stack: err.stack,
       },
     });
   }
 };
+
+
 
 exports.selectContact = async (req, res) => {
   const {

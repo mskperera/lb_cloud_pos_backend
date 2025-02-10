@@ -20,8 +20,7 @@ exports.product_Add =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-    costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
     reorderLevel,
@@ -36,7 +35,7 @@ console.log('body:',req.body);
     tenant,
     tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
     comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-    brandId,costPrice,unitPrice,sku,barcode,reorderLevel,isExpiringProduct);
+    brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct);
 
 
 if(result.error){
@@ -81,8 +80,7 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-   // costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
     reorderLevel,
@@ -117,8 +115,7 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-   // costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
     reorderLevel,
