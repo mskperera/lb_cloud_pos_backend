@@ -1,32 +1,18 @@
-const { default: customAxios } = require('../utils/axios');
-
-// exports.get_connectionDetails_by_tenantId = async (tenantId) => {
-//     try {
-//         const response = await customAxios.get(`/api/operational/getConnectionDetailsByTenantId?tenantId=${tenantId}`);
-//         console.log('Response:', response.data);
-//         return response.data;
-//       }catch (err) {
-//        return err;
-//      }
-// };
-
-
-
 const axios = require('axios');
-  
+
 exports.get_connectionDetails_by_tenantId = async (tenantId) => {
     try {
-        const response = await axios.get(`http://localhost:7000/api/operational/getConnectionDetailsByTenantId`, {
-          params: { tenantId: tenantId }, // Query parameters
-          timeout: 5000, // Timeout after 5 seconds
+
+        const response = await axios.get(`${process.env.OPERATIONAL_SERVICE_URL}/operational/getConnectionDetailsByTenantId`, {
+          headers: { "x-api-key": process.env.OPERATIONAL_API_KEY },
+          params: { tenantId: tenantId },
+          timeout: 10000,// 10 seconds
         });
     
-        // Handle the response data
-        console.log('Tenant Connection Details:', response.data);
-        return response.data; // Return the data to the caller
+        console.log('Tenant Connection Details:', response);
+        return response.data;
       } catch (error) {
-        // Handle errors
         console.error('Error fetching tenant connection details:', error.message);
-        throw error; // Rethrow error for the calling function to handle
+        throw error;
       }
 };
