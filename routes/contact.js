@@ -7,7 +7,7 @@ const {  selectContact, deleteContact, getContactType_dropdown,
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, authMiddleware } = require("../middlewares/auth");
 
- router.post("/contacts/getContacts",setTenant, selectContact);
+ router.post("/contacts/getContacts",setTenant,requireSignin,authMiddleware, selectContact);
 
 router.post("/contacts",setTenant,requireSignin,authMiddleware, addContact_ctrl);
 router.put("/contacts/:contactId", setTenant,  requireSignin,authMiddleware,updateContact_ctrl);
