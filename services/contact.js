@@ -1,52 +1,29 @@
 const { contact_insert_update_sql } = require("../sql/contact");
+const validator = require('validator');
 
-
-exports.contactAdd_srv =async ( 
-  tenant,
-  tableId,
-  contactTypeId,
-  contactName,
-  email,
-  mobile,
-  tel,
-  remark) => {
+exports.contactAdd_srv =async ( tenant, tableId,contactTypeId,contactName,
+  email,mobile, tel,remark) => {
   
+ // Validation
+ const errors = [];
+ if (!contactTypeId) errors.push("contactTypeId is Required");
+ if (!contactName) errors.push("contactName is Required");
+ if (!email || !validator.isEmail(email)) errors.push("Valid email is Required");
+ if (!mobile) errors.push("mobile is Required");
+ if (!tel) errors.push("tel is Required");
+ if (!remark) errors.push("remark is Required");
 
-  if (!contactTypeId) {
-    return {
-      error: {message:"contactTypeId is Required"},
-    }
-  }
+ if (errors.length > 0) {
+   return { error: { message: errors.join(", ") } };
+ }
 
-  if (!contactName) {
-    return {
-      error: {message:"contactName is Required"},
-    }
-  }
+ // Sanitization
+ contactName = validator.escape(contactName.trim());
+ email = validator.normalizeEmail(email.trim());
+ mobile = validator.escape(mobile.trim());
+ tel = validator.escape(tel.trim());
+ remark = validator.escape(remark.trim());
 
-  if (!email) {
-    return {
-      error: {message:"email is Required"},
-    };
-  }
-
-  if (!mobile) {
-    return {
-      error: {message:"mobile is Required"},
-    };
-  }
-
-  if (!tel) {
-    return {
-      error: {message:"tel is Required"},
-    };
-  }
-
-  if (!remark) {
-    return {
-      error: {message:"remark is Required"},
-    };
-  }
 
   const utcOffset='5:30';
   const userLogId=1;
