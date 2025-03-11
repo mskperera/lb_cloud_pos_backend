@@ -1,31 +1,25 @@
-// const sql = require("mssql");
-const { create } = require('xmlbuilder2');
-const { pool, executeStoredProcedureWithOutputParams } = require("../mysql");
-const { SP_STATUS } = require('../constants');
-const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select } = require('../sql/order');
-
-
+const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_OrderId, drp_order_voiding_reason_select, OrderFull_Select, checkNewOrderReciptAvailability_sql } = require('../sql/order');
 
 exports.orderAdd = async (req, res) => {
   const {
-    customerId,terminalId,sessionId,
+    customerId,terminalId,sessionId,storeId,
     overallDiscounts,
     orderList,paymentList,isConfirm
   } = req.body;
-console.log('req.body----------',req.body)
+
   const tenant=req.tenant;
-  const utcOffset='5:30';
-  const userLogId=1;
+  const utcOffset=req.authUser.utcOffset;
+  const userLogId=req.authUser.userLogId;
   const IsStockSupported=false;
   const pageName='p';
 
   //visibletoEveryone,technicalReview
   try {
-    if (!customerId) {
-      return res.status(422).json({
-        error: {message:"customerId is Required"},
-      });
-    }
+    // if (!customerId) {
+    //   return res.status(422).json({
+    //     error: {message:"customerId is Required"},
+    //   });
+    // }
 
 
     if (!terminalId) {
@@ -38,6 +32,12 @@ console.log('req.body----------',req.body)
         error: {message:"sessionId is Required"},
       });
     }
+    if (!storeId) {
+      return res.status(422).json({
+        error: {message:"storeId is Required"},
+      });
+    }
+    
 
     if (!orderList || !orderList[0]) {
       return res.status(422).json({
@@ -59,7 +59,7 @@ console.log('req.body----------',req.body)
     
    //const {userId,roleId,gmtOffset,userLogId}=req.authUser;
 
-  const result=await order_Insert(tenant,customerId,terminalId,sessionId,
+  const result=await order_Insert(tenant,customerId,terminalId,sessionId,storeId,
     overallDiscounts,
     orderList,paymentList,IsStockSupported,
     userLogId,utcOffset,pageName,isConfirm)
@@ -86,7 +86,7 @@ exports.orderSelect =async (req, res) => {
   console.log('orderToDate: ',orderToDate)
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -114,7 +114,7 @@ exports.getOrderReceiptByOrderId =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -141,7 +141,7 @@ exports.voidOrderByOrderId =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId; 
   const pageName='p';
 
   try {
@@ -184,7 +184,7 @@ exports.getOrderVoidingReason_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -210,7 +210,7 @@ exports.getOrderFull_ctrl =async (req, res) => {
   const {orderId,orderNo } = req.body;
  
   const tenant=req.tenant;
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId;
   console.log('orderId,orderId',orderId)
 
 
@@ -236,30 +236,3 @@ exports.getOrderFull_ctrl =async (req, res) => {
 }
 };
 
-
-
-exports.checkNewOrderReciptAvailability_ctrl =async (req, res) => {
-
-  const { } = req.body;
- 
-  const tenant=req.tenant;
-  const userLogId=1;
-
-
-  try {
-
-  //const result= await OrderFull_Select(tenant,orderId,orderNo, userLogId);
-
-      res.json({isNewOrder:true});
-
-} catch (err) {
-  console.log('Errori: ',err)
-  return res.status(400).json({ 
-    error: {
-      message: err.message,
-      name: err.name, // include other properties if needed
-      stack: err.stack
-    }
-  });
-}
-};

@@ -8,7 +8,6 @@ const cors = require('cors');
 
 const morgan = require('morgan');
 const { readdirSync } = require('fs');
-const { test } = require('./mysql');
 
 //test();
 
@@ -36,7 +35,27 @@ app.use(cookieParser());
 //app.use(cors({ origin: `${process.env.CLIENT_URL}` }));
 //}
 
-app.use(cors());
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Allow requests with no origin, like mobile apps or curl requests
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, // Enable cookies and other credentials
+};
+
+// Use CORS middleware
+app.use(cors(corsOptions));
+
+//app.use(cors());
 
 //reoutes middlewares
 

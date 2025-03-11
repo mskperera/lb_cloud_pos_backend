@@ -1,14 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {orderAdd, orderSelect, getOrderReceiptByOrderId, voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl, checkNewOrderReciptAvailability_ctrl} = require("../controllers/order");
+const {orderAdd, orderSelect, getOrderReceiptByOrderId, voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
-const { requireSignin, authMiddleware } = require("../middlewares/auth");
+const { requireSignin, roleMiddleware } = require("../middlewares/auth");
+const { USER_ROLE } = require("../utils/constants");
 
 router.post(
   "/order/orderAdd",
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   orderAdd
 );
 
@@ -16,7 +17,7 @@ router.post(
   '/order/getOrders',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   orderSelect
 );
 
@@ -24,15 +25,23 @@ router.get(
   '/order/getReceipt/:orderId',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getOrderReceiptByOrderId
 );
+
+router.get(
+  '/order/getReceiptExt/:orderId',
+  setTenant,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getOrderReceiptByOrderId
+);
+
 
 router.post(
   '/order/voidOrder',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   voidOrderByOrderId
 );
 
@@ -40,7 +49,7 @@ router.get(
   '/dropdown/getOrderVoidingReason_dropdown',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getOrderVoidingReason_dropdown
 );
 
@@ -48,16 +57,9 @@ router.post(
   '/order/getOrderFull',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getOrderFull_ctrl
 );
 
-router.get(
-  '/order/checkNewOrderReciptAvailability',
-  setTenant,
-  requireSignin,
-  authMiddleware,
-  checkNewOrderReciptAvailability_ctrl
-);
 
 module.exports = router;

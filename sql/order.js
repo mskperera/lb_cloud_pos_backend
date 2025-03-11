@@ -1,4 +1,4 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
 exports.order_Insert = async (
@@ -6,6 +6,7 @@ exports.order_Insert = async (
   customerId,
   terminalId,
   sessionId,
+  storeId,
   overallDiscounts,
   orderList,
   paymentList,
@@ -29,6 +30,7 @@ exports.order_Insert = async (
       customerId,
       terminalId,
       sessionId,
+      storeId,
       orderLevelDiscount_json,
       orderList_json,
       paymentList_json,
@@ -41,7 +43,7 @@ exports.order_Insert = async (
     const procedureOutputParameters = [
       "responseStatus",
       "outputMessage",
-      "orderNo",
+      "orderId",
       "balanceAmount"
     ];
     const procedureName = "Order_Insert";
@@ -252,6 +254,74 @@ exports.OrderFull_Select = async (
       "outputMessage"
     ];
     const procedureName = "OrderFull_Select";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.checkNewOrderReciptAvailability_sql = async (
+  tenant,
+terminalId
+) => {
+  try {
+    const {pool}=tenant;
+
+  
+    const procedureParameters = [
+      terminalId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "external_checkNewOrderReciptAvailability";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      throw { message: outputMessage };
+    }
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.clearPrintingData_sql = async (
+  tenant,
+terminalId
+) => {
+  try {
+    const {pool}=tenant;
+
+  
+    const procedureParameters = [
+      terminalId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "external_clearPrintingData";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,

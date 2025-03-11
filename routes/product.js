@@ -5,46 +5,131 @@ const {
   product_Add,
   product_Update,
   getProducts,
+  getProductTypes_drp,
+  getProductExtraDetails,
+  getProductAvailaleStores,
+  getNonSerializedItems,
+  getStores_ctrl,
+  getVariationTypes_drp,
+  getProductsAllVariations,
+  getProductsPosMenu,
+  getVariationProductDetails_ctrl
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
-const { requireSignin,authMiddleware } = require('../middlewares/auth');
+const { requireSignin, roleMiddleware} = require('../middlewares/auth');
+const { USER_ROLE } = require('../utils/constants');
 
 
 router.post(
-  '/product/add',
+  '/products',
   setTenant,
-  requireSignin,
-  authMiddleware,
+ requireSignin,
+ roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER]),
   product_Add
-);
+); // Add Product
 
 router.put(
-  '/product/update/:productId',
+  '/products/:productId',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER]),
   product_Update
-);
+); // Update Product
 
 
 router.delete(
-  '/product/delete',
+  '/products',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER]),
   product_delete
 );
 
 router.post(
-  '/product/products',
+  '/products/get',
   setTenant,
   requireSignin,
-  authMiddleware,
-
+   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getProducts
+); // Search Products
+
+router.post(
+  '/product/getProductsPosMenu',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductsPosMenu
+);
+
+router.post(
+  '/product/getVariationProductDetails',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getVariationProductDetails_ctrl
+);
+
+router.post(
+  '/product/productsAllVariations',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductsAllVariations
 );
 
 
+router.get(
+  '/dropdown/productTypes',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductTypes_drp
+);
+
+router.get(
+  '/dropdown/getVariationTypes',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getVariationTypes_drp
+);
+
+
+router.get(
+  '/product/products/extra',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductExtraDetails
+);
+
+
+router.post(
+  '/product/getProductAvailaleStores',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductAvailaleStores
+);
+
+router.post(
+  '/product/getNonSerializedItems',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getNonSerializedItems
+);
+
+
+router.get(
+  '/dropdown/getStores',
+  setTenant,
+   requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getStores_ctrl
+);
 
 module.exports = router;
+
+
