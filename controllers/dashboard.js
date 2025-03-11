@@ -1,15 +1,13 @@
-const { drp_brand_select_sql } = require("../sql/brand");
+const { dashboard_details_Select_sql } = require("../sql/dashboard");
 
-exports.getBrands_dropdown =async (req, res) => {
+exports.getDashboardDetails =async (req, res) => {
 
-  const { } = req.body;
+  const {sessionId } = req.body;
   const tenant=req.tenant;
-  const utcOffset='5:30';
   const userLogId=req.authUser.userLogId;
-  const pageName='p';
-
+console.log('req.body',req.body)
   try {
-  const result= await drp_brand_select_sql(tenant, userLogId,utcOffset,pageName);
+  const result= await dashboard_details_Select_sql(tenant,sessionId,userLogId);
 
       res.json(result);
 

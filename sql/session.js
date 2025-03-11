@@ -1,8 +1,8 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS,CONSOLE_TEXT_COLORS}=require('../constants/constants');
 const {
   executeStoredProcedureWithOutputParamsByPool,
 } = require("../mysql/sql_executer");
-const { CONSOLE_TEXT_COLORS } = require("../constants");
+
 const { consoleSuccessText, consoleErrorText, consoleExceptionText } =
   CONSOLE_TEXT_COLORS;
 
@@ -202,6 +202,8 @@ exports.sessionEndDetails_Select_sql = async (
 
 exports.drp_session_select_sql = async (
   tenant,
+  descOrder,
+  storeId,
   userLogId,
   utcOffset,
   pageName
@@ -209,6 +211,8 @@ exports.drp_session_select_sql = async (
   const { pool } = tenant;
   try {
     const procedureParameters = [
+      descOrder,
+      storeId,
       userLogId,
       utcOffset,
       pageName,

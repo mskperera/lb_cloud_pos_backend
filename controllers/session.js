@@ -134,14 +134,17 @@ exports.getSessionEndDetails_ctrl = async (req, res) => {
 
 exports.getDrpSession_ctrl =async (req, res) => {
 
-  const { } = req.body;
+  const {descOrder,storeId} = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
+  const storeId_int=storeId==='null'?null:parseInt(storeId);
+  console.log('descOrder  descOrder descOrderdescOrder: ',descOrder,storeId)
+  //descOrder || (descOrder = 'asc');
   try {
-  const result= await drp_session_select_sql(tenant, userLogId,utcOffset,pageName);
+  const result= await drp_session_select_sql(tenant, descOrder,storeId_int,userLogId,utcOffset,pageName);
 
       res.json(result);
 

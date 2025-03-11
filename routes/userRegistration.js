@@ -1,55 +1,58 @@
 const express = require("express");
 const router = express.Router();
-const {
-  sessionStart_ctrl,
-  sessionEnd_ctrl,
-  getSessionEndDetails_ctrl,
-  getDrpSession_ctrl,
-  get_latest_Session_details_ctrl,
-} = require("../controllers/session");
+
 const { setTenant } = require("../middlewares/tenancyManage");
 const {
   requireSignin,
   roleMiddleware,
 } = require("../middlewares/auth");
+const {
+  deleteUserRegistration_ctrl,
+  getUserRole_dropdown_ctrl,
+  addUserRegistration_ctrl,
+  updateUserRegistration_ctrl,
+  getUserRegistration_ctrl,
+} = require("../controllers/userRegistration");
 const { USER_ROLE } = require("../utils/constants");
 
 router.post(
-  "/session/start",
+  "/userRegistrations",
   setTenant,
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
-  sessionStart_ctrl
+  addUserRegistration_ctrl
 );
-router.post(
-  "/session/end",
+
+router.put(
+  "/userRegistrations/:userId",
   setTenant,
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
-  sessionEnd_ctrl
+  updateUserRegistration_ctrl
 );
+
 router.post(
-  "/session/end/get",
+  "/userRegistrations/get",
   setTenant,
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
-  getSessionEndDetails_ctrl
+  getUserRegistration_ctrl
+);
+
+router.delete(
+  "/userRegistrations",
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  deleteUserRegistration_ctrl
 );
 
 router.get(
-  "/dropdown/getDrpSession",
+  "/dropdown/userRoles",
   setTenant,
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
-  getDrpSession_ctrl
-);
-
-router.get(
-  "/session/getLatestSessionDetails",
-  setTenant,
-  requireSignin,
-  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
-  get_latest_Session_details_ctrl
+  getUserRole_dropdown_ctrl
 );
 
 module.exports = router;

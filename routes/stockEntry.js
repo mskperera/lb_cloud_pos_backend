@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
-const {orderAdd, orderSelect, getOrderReceiptByOrderId, 
-  voidOrderByOrderId, getOrderVoidingReason_dropdown, getOrderFull_ctrl} = require("../controllers/order");
 const { setTenant } = require("../middlewares/tenancyManage");
-const { requireSignin, authMiddleware } = require("../middlewares/auth");
-const { stockAdd, getStockEntries } = require("../controllers/stockEntry");
+const { requireSignin, roleMiddleware } = require("../middlewares/auth");
+const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl, getInventoryTransactionHistory_ctrl } = require("../controllers/stockEntry");
+const { USER_ROLE } = require("../utils/constants");
 
 router.post(
   "/stock/stockAdd",
   setTenant,
   requireSignin,
-  authMiddleware,
+   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   stockAdd
 );
 
@@ -18,48 +17,98 @@ router.post(
   '/stock/stockEntries',
   setTenant,
   requireSignin,
-  authMiddleware,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getStockEntries
 );
 
 router.get(
-  '/order/getReceipt/:orderId',
+  '/stock/getStockEntryFull',
   setTenant,
   requireSignin,
-  authMiddleware,
-  getOrderReceiptByOrderId
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getStockEntryFullbyStockEntryId
 );
 
 router.get(
-  '/order/getReceiptExt/:orderId',
-  setTenant,
-
-  getOrderReceiptByOrderId
-);
-
-
-router.post(
-  '/order/voidOrder',
+  '/stock/stockEntry_void',
   setTenant,
   requireSignin,
-  authMiddleware,
-  voidOrderByOrderId
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  stockEntryVoid
 );
 
 router.get(
-  '/dropdown/getOrderVoidingReason_dropdown',
+  '/dropdown/getDrpdownStockEntryVoidingReason',
   setTenant,
   requireSignin,
-  authMiddleware,
-  getOrderVoidingReason_dropdown
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getStockEntryVoidingReason_dropdown
+);
+
+router.get(
+  '/stock/getStockInfo',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getStockInfo_ctrl
 );
 
 router.post(
-  '/order/getOrderFull',
+  '/stock/stockAdjust',
   setTenant,
   requireSignin,
-  authMiddleware,
-  getOrderFull_ctrl
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  stockAdjust_ctrl
+);
+
+router.get(
+  '/stock/getStockAdjustments',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getStockAdjustments_ctrl
+);
+
+router.get(
+  `/dropdown/getAdjustmentReasons`,
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getAdjustmentReasons_dropdown_ctrl
+);
+
+router.post(
+  '/stock/updatePriceCost',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  update_price_cost_ctrl
+);
+
+router.get(
+  `/stock/getPriceChange`,
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getPriceChange_ctrl
+);
+
+router.post(
+  '/stock/releaseStockBatch',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  releaseStockBatch_ctrl
+);
+
+
+
+router.post(
+  '/stock/getInventoryTransactionHistory',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getInventoryTransactionHistory_ctrl
 );
 
 

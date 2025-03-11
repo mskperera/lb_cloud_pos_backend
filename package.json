@@ -1,24 +1,25 @@
 {
-  "name": "backend",
+  "name": "pos_backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "mocha test/product.test.js",
     "test:watch": "nodemon --exec mocha 'test/dc_product.test.js'"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^1.7.7",
+    "axios": "^1.7.9",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.18.2",
     "express-jwt": "^5.3.3",
-    "express-validator": "^6.10.0",
+    "express-validator": "^6.15.0",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.0.1",
     "lodash": "^4.17.21",
@@ -29,6 +30,7 @@
     "nodemailer": "^6.5.0",
     "nodemon": "^2.0.20",
     "socket.io-client": "^2.4.0",
+    "validator": "^13.12.0",
     "ws": "^8.18.0",
     "xmlbuilder2": "^3.0.2"
   },

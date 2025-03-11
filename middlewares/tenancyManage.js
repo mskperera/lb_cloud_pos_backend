@@ -1,6 +1,6 @@
 const { getTenant } = require("../mysql/tenantList");
 
-//Middleware to authenticate requests - MY VERSION
+//Middleware to authenticate requests
 exports.setTenant = async (req, res, next) => {
     //const token = req.cookies.accessToken;
    const tenantId = req.headers['tenantid'];

@@ -1,5 +1,5 @@
 const mysql = require("mysql2");
-const { get_connectionDetails_by_tenantId } = require("../sql/operational");
+const { get_connectionDetails_by_tenantId } = require("../services/tenant");
 
 const createMysqlPool = (host, user, password, database, connectionLimit = 10) => {
     // Create a connection pool
@@ -27,11 +27,12 @@ const getTenant=async(tenantId)=>{
   if (!foundTenant) {
 
     const tenant = await get_connectionDetails_by_tenantId(tenantId);
-    const { connectionId, hostName, dbUsername, dbPassword, dbName,port,jwtSecret } = tenant;
     console.log('tenant poollist',tenant);
+    const { connectionId, hostName, dbUsername, dbPassword, dbName,port,jwtSecret } = tenant;
+  
     // Create a connection pool
     const pool = mysql.createPool({
-      connectionLimit: 40, // Number of connections to create
+      connectionLimit: 1, // Number of connections to create
       host: hostName,
       user: dbUsername,
       password: dbPassword,

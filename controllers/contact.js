@@ -1,49 +1,21 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS}=require('../constants/constants');
+const { contactAdd_srv, contactUpdate_srv } = require('../services/contact');
 const {
-  customer_insert_update,
-  customer_select,
-  customer_delete,
+  contact_select,
+  contact_delete,
   drp_contactType_select_sql,
-  drp_contact_select,
   drp_supplier_select,
   drp_customer_select,
-} = require("../sql/customer");
+} = require("../sql/contact");
 
-exports.addCustomer = async (req, res) => {
-  const {contactTypeId, contactName, email, mobile, tel, remark } =
-    req.body;
-
+exports.addContact_ctrl = async (req, res) => {
+  const {contactTypeId, contactName, email, mobile, tel, remark } = req.body;
   const tenant = req.tenant;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
-  const isConfirm = true;
-  const saveType = "I";
-
+  const userLogId=req.authUser.userLogId;
   try {
 
-    
-    if (!contactTypeId) {
-      return res.status(422).json({
-        error: {message:"contactTypeId is Required"},
-      });
-    }
-
-    if (!contactName) {
-      return res.status(422).json({
-        error: {message:"contactName is Required"},
-      });
-    }
-
-
-    if (!mobile) {
-      return res.status(422).json({
-        error: {message:"mobile is Required"},
-      });
-    }
-
-
-    const result = await customer_insert_update(
+  console.log('add contactTypeId',contactTypeId);
+    const result = await contactAdd_srv(
       tenant,
       null,
       contactTypeId,
@@ -52,12 +24,9 @@ exports.addCustomer = async (req, res) => {
       mobile,
       tel,
       remark,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm
+      userLogId
     );
+
     if(result.error){
       return res.status(422).json({
         error:result.error
@@ -77,80 +46,54 @@ exports.addCustomer = async (req, res) => {
   }
 };
 
-exports.updateCustomer = async (req, res) => {
-  const { contactId } = req.params;
+
+exports.updateContact_ctrl = async (req, res) => {
+
+    const { contactId } = req.params;
+    const {contactTypeId, contactName, email, mobile, tel, remark } =req.body;
+
   const tenant = req.tenant;
-  console.log("customerid", contactId);
-  const {contactTypeId, contactName, email, mobile, tel, remark } = req.body;
-  const utcOffset = "5:30";
-  const userLogId = 1;
-  const pageName = "p";
-  const tableId = contactId;
-  const saveType = "U";
-  const isConfirm = true;
+  const userLogId=req.authUser.userLogId;
 
   try {
 
-    if (!contactId) {
-      return res.status(422).json({
-        error: {message:"contactId is Required"},
-      });
-    }
-
-
-    if (!contactTypeId) {
-      return res.status(422).json({
-        error: {message:"contactTypeId is Required"},
-      });
-    }
-
-    if (!contactName) {
-      return res.status(422).json({
-        error: {message:"contactName is Required"},
-      });
-    }
-
-
-    if (!mobile) {
-      return res.status(422).json({
-        error: {message:"mobile is Required"},
-      });
-    }
-
-
-    const result = await customer_insert_update(
+    const result = await contactUpdate_srv(
       tenant,
-      tableId,
+      contactId,
       contactTypeId,
       contactName,
       email,
       mobile,
       tel,
       remark,
-      saveType,
-      userLogId,
-      utcOffset,
-      pageName,
-      isConfirm
+      userLogId
     );
 
-    res.status(200).json(result);
+    if(result.error){
+      return res.status(422).json({
+        error:result.error
+      });
+  }
+
+    res.status(201).json(result);
   } catch (err) {
     console.log("Errori: ", err);
     return res.status(400).json({
       error: {
         message: err.message,
-        name: err.name,
+        name: err.name, // include other properties if needed
         stack: err.stack,
       },
     });
   }
 };
 
-exports.selectCustomer = async (req, res) => {
+
+
+exports.selectContact = async (req, res) => {
   const {
     contactId,
-    contactTypeId,
+    contactTypeIds,
     contactCode,
     contactName,
     email,
@@ -160,18 +103,27 @@ exports.selectCustomer = async (req, res) => {
     skip,
     limit,
   } = req.body;
-  console.log("selectCustomer req.body: ", req.body);
+  console.log("selectContact req.body: ", req.body);
+  
   const tenant = req.tenant;
   const utcOffset = "5:30";
   const userLogId = 1;
   const pageName = "p";
   const promptBeforeContinue = false;
 
+if (!Array.isArray(contactTypeIds)) {
+  return res.status(400).json({
+    error: {
+      message: "Invalid data type: contactTypeIds should be an array.",
+    },
+  });
+}
+
   try {
-    const result = await customer_select(
+    const result = await contact_select(
       tenant,
       contactId,
-      contactTypeId,
+      contactTypeIds,
       contactCode,
       contactName,
       email,
@@ -199,7 +151,7 @@ exports.selectCustomer = async (req, res) => {
   }
 };
 
-exports.deleteCustomer = async (req, res) => {
+exports.deleteContact = async (req, res) => {
   const { contactId, isConfirm } = req.query;
 
   const tenant = req.tenant;
@@ -209,7 +161,7 @@ exports.deleteCustomer = async (req, res) => {
   const pageName = "p";
 
   try {
-    const result = await customer_delete(
+    const result = await contact_delete(
       tenant,
       contactId,
       userLogId,
@@ -251,7 +203,7 @@ exports.getContactType_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -273,7 +225,7 @@ exports.getContactType_dropdown =async (req, res) => {
 
 exports.getSupplier_dropdown =async (req, res) => {
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   try {
 
   const result= await drp_supplier_select(tenant, userLogId);
@@ -294,7 +246,7 @@ exports.getSupplier_dropdown =async (req, res) => {
 
 exports.getCustomer_dropdown =async (req, res) => {
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   try {
 
   const result= await drp_customer_select(tenant, userLogId);

@@ -1,5 +1,5 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql } = require('../sql/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -20,22 +20,23 @@ exports.product_Add =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-    costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
-    reorderLevel
+    reorderLevel,
+    isExpiringProduct
   } = req.body;
 
 console.log('body:',req.body);
   const tenant=req.tenant;
-  
+  const userLogId=req.authUser.userLogId;
+
   try {
   const result=  await productAdd_srv(
     tenant,
     tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
     comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-    brandId,costPrice,unitPrice,sku,barcode,reorderLevel);
+    brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId);
 
 
 if(result.error){
@@ -80,16 +81,16 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-   // costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
-    reorderLevel
+    reorderLevel,
+    isExpiringProduct
   } = req.body;
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
   const tableId=productId;
   const saveType="U";
@@ -115,16 +116,12 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     brandId,
-   // costPrice,
-    unitPrice,
+    unitCost,unitPrice,taxPerc,
     sku,
     barcode,
     reorderLevel,
-    saveType,
-    userLogId,
-    utcOffset,
-    pageName,
-    promptBeforeContinue
+    isExpiringProduct,
+    userLogId
     );
 
 
@@ -160,12 +157,12 @@ exports.product_Update =async (req, res) => {
 
 
 exports.getProducts =async (req, res) => {
-  // console.log('products_Select',req.body);
+   console.log('products_Select',req.body);
   const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -188,13 +185,63 @@ exports.getProducts =async (req, res) => {
 }
 };
 
+
+exports.getProductsPosMenu =async (req, res) => {
+  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+    categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=req.authUser.userLogId;
+  const pageName='p';
+
+  try {
+  const result= await product_select_pos_menu_sql(tenant,productId,  productNo, productName,
+    sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
+    allSearchableFields,searchByKeyword,
+    skip,limit, userLogId,utcOffset,pageName);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name,
+      stack: err.stack
+    }
+  });
+}
+};
+
+exports.getVariationProductDetails_ctrl =async (req, res) => {
+  const {productId,storeId } = req.body;
+  const tenant=req.tenant;
+
+  try {
+  const result= await getVariationProductDetails_sql(tenant,productId,storeId);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name,
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+
 exports.getProductsAllVariations =async (req, res) => {
   // console.log('products_Select',req.body);
   const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -225,7 +272,7 @@ exports.product_delete =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
   console.log('product_delete: ',_isConfirm)
   try {
@@ -249,7 +296,7 @@ exports.getProductTypes_drp =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -344,7 +391,7 @@ exports.getStores_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -370,7 +417,7 @@ exports.getVariationTypes_drp =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {

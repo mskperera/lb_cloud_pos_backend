@@ -1,25 +1,22 @@
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 const {SP_STATUS}=require('../constants/constants');
 
-
-exports.drp_brand_select_sql = async (
+exports.dashboard_details_Select_sql = async (
   tenant,
-  userLogId,
-  utcOffset,
-  pageName
+  sessionId,
+  userLogId
 ) => {
   const { pool } = tenant;
   try {
     const procedureParameters = [
-      userLogId,
-      utcOffset,
-      pageName,
+      sessionId,
+      userLogId
     ];
     const procedureOutputParameters = [
       "responseStatus",
       "outputMessage"
     ];
-    const procedureName = "drp_brand_select";
+    const procedureName = "dashboard_details_Select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,

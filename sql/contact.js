@@ -1,7 +1,7 @@
-const { SP_STATUS } = require("../constants");
+const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
-exports.customer_insert_update = async (tenant,
+exports.contact_insert_update_sql = async (tenant,
   tableId,
   contactTypeId,
   contactName,
@@ -38,7 +38,7 @@ exports.customer_insert_update = async (tenant,
       "contactCode",
       "contactId",
     ];
-    const procedureName = "Customer_Insert_Update";
+    const procedureName = "contact_insert_update";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
@@ -58,9 +58,9 @@ exports.customer_insert_update = async (tenant,
   }
 };
 
-exports.customer_select = async (tenant,
+exports.contact_select = async (tenant,
   contactId,
-  contactTypeId,
+  contactTypeIds,
   contactCode,
   contactName,
   email,
@@ -75,9 +75,13 @@ exports.customer_select = async (tenant,
 ) => {
   try {
     const {pool}=tenant;
+
+
+    const contactTypeIdsString = contactTypeIds ? contactTypeIds.join(",") : null;
+
     const procedureParameters = [
       contactId,
-      contactTypeId,
+      contactTypeIdsString,
       contactCode,
       contactName,
       email,
@@ -95,7 +99,7 @@ exports.customer_select = async (tenant,
       "outputMessage",
       "totalRows",
     ];
-    const procedureName = "Customer_Select";
+    const procedureName = "contact_select";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
@@ -151,7 +155,7 @@ exports.drp_contactType_select_sql = async (
 };
 
 
-exports.customer_delete = async (tenant,
+exports.contact_delete = async (tenant,
   contactId,
   userLogId,
   utcOffset,
@@ -168,7 +172,7 @@ exports.customer_delete = async (tenant,
       isConfirm,
     ];
     const procedureOutputParameters = ["responseStatus", "outputMessage"];
-    const procedureName = "Customer_Delete";
+    const procedureName = "contact_delete";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,
