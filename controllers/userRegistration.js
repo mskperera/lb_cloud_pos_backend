@@ -177,7 +177,7 @@ exports.getUserRole_dropdown_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {

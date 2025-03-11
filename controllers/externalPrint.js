@@ -6,7 +6,7 @@ exports.checkNewOrderReciptAvailability_ctrl =async (req, res) => {
   const {terminalId } = req.params;
  
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
 
 
   try {

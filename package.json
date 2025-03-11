@@ -1,10 +1,11 @@
 {
-  "name": "backend",
+  "name": "pos_backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "dev": "nodemon server.js",
+    "start": "node server.js",
     "test": "mocha test/product.test.js",
     "test:watch": "nodemon --exec mocha 'test/dc_product.test.js'"
   },

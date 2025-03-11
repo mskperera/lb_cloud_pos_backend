@@ -29,13 +29,14 @@ exports.product_Add =async (req, res) => {
 
 console.log('body:',req.body);
   const tenant=req.tenant;
-  
+  const userLogId=req.authUser.userLogId;
+
   try {
   const result=  await productAdd_srv(
     tenant,
     tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
     comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
-    brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct);
+    brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId);
 
 
 if(result.error){
@@ -89,7 +90,7 @@ exports.product_Update =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
   const tableId=productId;
   const saveType="U";
@@ -119,7 +120,8 @@ exports.product_Update =async (req, res) => {
     sku,
     barcode,
     reorderLevel,
-    isExpiringProduct
+    isExpiringProduct,
+    userLogId
     );
 
 
@@ -160,7 +162,7 @@ exports.getProducts =async (req, res) => {
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -189,7 +191,7 @@ exports.getProductsPosMenu =async (req, res) => {
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -239,7 +241,7 @@ exports.getProductsAllVariations =async (req, res) => {
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -270,7 +272,7 @@ exports.product_delete =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
   console.log('product_delete: ',_isConfirm)
   try {
@@ -294,7 +296,7 @@ exports.getProductTypes_drp =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -389,7 +391,7 @@ exports.getStores_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -415,7 +417,7 @@ exports.getVariationTypes_drp =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {

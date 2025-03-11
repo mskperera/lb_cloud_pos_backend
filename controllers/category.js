@@ -4,7 +4,7 @@ exports.getProductCategories =async (req, res) => {
 
   const {categoryId,limit,skip } = req.body;
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
 console.log('req.body',req.body)
   try {
   const result= await category_select_sql(tenant,categoryId,skip,limit, userLogId);
@@ -147,7 +147,7 @@ exports.getRegistermMenuProductCategory =async (req, res) => {
   const {productId,productNo, productName, barcode,productCategoryId,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -173,7 +173,7 @@ exports.getCategory_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {

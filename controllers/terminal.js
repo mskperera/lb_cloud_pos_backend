@@ -6,11 +6,11 @@ exports.getTeminallByUserId_dropdown_ctrl =async (req, res) => {
   const {userId } = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
-  const result= await drp_teminallByUserId(tenant, userLogId,utcOffset,pageName);
+  const result= await drp_teminallByUserId(tenant, userId,utcOffset,pageName);
 
       res.json(result);
 
@@ -32,7 +32,7 @@ exports.getTerminalDetailslByTerminalId_ctrl =async (req, res) => {
   const {terminalId } = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {

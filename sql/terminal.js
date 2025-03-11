@@ -21,7 +21,7 @@ exports.drp_teminallByUserId = async (
       "responseStatus",
       "outputMessage"
     ];
-    const procedureName = "drp_teminallByUserId";
+    const procedureName = "drp_teminalsByUserId";
     const result = await executeStoredProcedureWithOutputParamsByPool(
       procedureName,
       procedureParameters,

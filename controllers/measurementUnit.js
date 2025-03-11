@@ -7,7 +7,7 @@ exports.getMeasurementUnit_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -33,7 +33,7 @@ exports.getMeasurementUnits =async (req, res) => {
 
   const {measurementUnitId,limit,skip } = req.body;
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
 console.log('req.body',req.body)
   try {
   const result= await measurementUnit_select_sql(tenant,measurementUnitId,skip,limit, userLogId);

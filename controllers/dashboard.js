@@ -4,7 +4,7 @@ exports.getDashboardDetails =async (req, res) => {
 
   const {sessionId } = req.body;
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
 console.log('req.body',req.body)
   try {
   const result= await dashboard_details_Select_sql(tenant,sessionId,userLogId);

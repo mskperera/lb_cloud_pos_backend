@@ -2,7 +2,7 @@ const { contact_insert_update_sql } = require("../sql/contact");
 const validator = require('validator');
 
 exports.contactAdd_srv =async ( tenant, tableId,contactTypeId,contactName,
-  email,mobile, tel,remark) => {
+  email,mobile, tel,remark,userLogId) => {
   
  // Validation
  const errors = [];
@@ -26,7 +26,6 @@ exports.contactAdd_srv =async ( tenant, tableId,contactTypeId,contactName,
 
 
   const utcOffset='5:30';
-  const userLogId=1;
   const pageName='p';
   const promptBeforeContinue=false;
   const saveType="I";
@@ -64,13 +63,20 @@ exports.contactUpdate_srv =async (
   email,
   mobile,
   tel,
-  remark) => {
+  remark,
+  userLogId) => {
   
+   
+    if (!userLogId) {
+      return {
+        error: {message:"userLogId is Required"},
+      }
+    }
 
     if (!tableId) {
-      return res.status(422).json({
+      return {
         error: {message:"tableId is Required"},
-      });
+      }
     }
 
   if (!contactTypeId) {
@@ -110,7 +116,6 @@ exports.contactUpdate_srv =async (
   }
 
   const utcOffset='5:30';
-  const userLogId=1;
   const pageName='p';
   const promptBeforeContinue=false;
   const saveType="U";

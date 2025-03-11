@@ -21,7 +21,7 @@ router.put("/contacts/:contactId", setTenant,  requireSignin,
   updateContact_ctrl); // Update contact
 
 router.delete(
-  "/contacts/delete",
+  "/contacts",
   setTenant,requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER]),
   deleteContact

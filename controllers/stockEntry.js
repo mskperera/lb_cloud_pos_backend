@@ -15,7 +15,7 @@ exports.stockAdd = async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -94,7 +94,7 @@ exports.getStockEntries =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -122,7 +122,7 @@ exports.getStockEntryFullbyStockEntryId =async (req, res) => {
   const {stockEntryId } = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -148,7 +148,7 @@ exports.getStockEntryVoidingReason_dropdown =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -174,7 +174,7 @@ exports.getOrderFull_ctrl =async (req, res) => {
   const {orderId,orderNo } = req.body;
  
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   console.log('orderId,orderId',orderId)
 
 
@@ -207,7 +207,7 @@ exports.stockEntryVoid =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
 
@@ -249,7 +249,7 @@ exports.getStockInfo_ctrl =async (req, res) => {
   const {inventoryId,showZeroStockQtyData } = req.query;
  
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
 
 const showZeroStockQtyDataBool=showZeroStockQtyData==="true"?true:false;
 
@@ -286,7 +286,7 @@ exports.stockAdjust_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
 
@@ -348,7 +348,7 @@ exports.getStockAdjustments_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
 
@@ -389,7 +389,7 @@ exports.getAdjustmentReasons_dropdown_ctrl =async (req, res) => {
   const {adjustmentTypeId } = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -420,7 +420,7 @@ exports.update_price_cost_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
 
@@ -480,7 +480,7 @@ exports.getPriceChange_ctrl =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
 

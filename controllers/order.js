@@ -8,8 +8,8 @@ exports.orderAdd = async (req, res) => {
   } = req.body;
 
   const tenant=req.tenant;
-  const utcOffset='5:30';
-  const userLogId=1;
+  const utcOffset=req.authUser.utcOffset;
+  const userLogId=req.authUser.userLogId;
   const IsStockSupported=false;
   const pageName='p';
 
@@ -86,7 +86,7 @@ exports.orderSelect =async (req, res) => {
   console.log('orderToDate: ',orderToDate)
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -114,7 +114,7 @@ exports.getOrderReceiptByOrderId =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -141,7 +141,7 @@ exports.voidOrderByOrderId =async (req, res) => {
 
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId; 
   const pageName='p';
 
   try {
@@ -184,7 +184,7 @@ exports.getOrderVoidingReason_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -210,7 +210,7 @@ exports.getOrderFull_ctrl =async (req, res) => {
   const {orderId,orderNo } = req.body;
  
   const tenant=req.tenant;
-  const userLogId=1;
+   const userLogId=req.authUser.userLogId;
   console.log('orderId,orderId',orderId)
 
 

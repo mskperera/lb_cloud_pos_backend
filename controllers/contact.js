@@ -1,7 +1,6 @@
 const {SP_STATUS}=require('../constants/constants');
 const { contactAdd_srv, contactUpdate_srv } = require('../services/contact');
 const {
-  contact_insert_update,
   contact_select,
   contact_delete,
   drp_contactType_select_sql,
@@ -10,11 +9,9 @@ const {
 } = require("../sql/contact");
 
 exports.addContact_ctrl = async (req, res) => {
-
   const {contactTypeId, contactName, email, mobile, tel, remark } = req.body;
- 
   const tenant = req.tenant;
-
+  const userLogId=req.authUser.userLogId;
   try {
 
   console.log('add contactTypeId',contactTypeId);
@@ -26,7 +23,8 @@ exports.addContact_ctrl = async (req, res) => {
       email,
       mobile,
       tel,
-      remark
+      remark,
+      userLogId
     );
 
     if(result.error){
@@ -55,6 +53,7 @@ exports.updateContact_ctrl = async (req, res) => {
     const {contactTypeId, contactName, email, mobile, tel, remark } =req.body;
 
   const tenant = req.tenant;
+  const userLogId=req.authUser.userLogId;
 
   try {
 
@@ -66,7 +65,8 @@ exports.updateContact_ctrl = async (req, res) => {
       email,
       mobile,
       tel,
-      remark
+      remark,
+      userLogId
     );
 
     if(result.error){
@@ -203,7 +203,7 @@ exports.getContactType_dropdown =async (req, res) => {
   const { } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   try {
@@ -225,7 +225,7 @@ exports.getContactType_dropdown =async (req, res) => {
 
 exports.getSupplier_dropdown =async (req, res) => {
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   try {
 
   const result= await drp_supplier_select(tenant, userLogId);
@@ -246,7 +246,7 @@ exports.getSupplier_dropdown =async (req, res) => {
 
 exports.getCustomer_dropdown =async (req, res) => {
   const tenant=req.tenant;
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   try {
 
   const result= await drp_customer_select(tenant, userLogId);

@@ -137,7 +137,7 @@ exports.getDrpSession_ctrl =async (req, res) => {
   const {descOrder,storeId} = req.query;
   const tenant=req.tenant;
   const utcOffset='5:30';
-  const userLogId=1;
+  const userLogId=req.authUser.userLogId;
   const pageName='p';
 
   const storeId_int=storeId==='null'?null:parseInt(storeId);
