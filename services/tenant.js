@@ -8,8 +8,6 @@ exports.get_connectionDetails_by_tenantId = async (tenantId) => {
           params: { tenantId: tenantId },
           timeout: 10000,// 10 seconds
         });
-    
-        console.log('Tenant Connection Details:', response);
         return response.data;
       } catch (error) {
         console.error('Error fetching tenant connection details:', error.message);

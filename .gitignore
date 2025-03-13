@@ -129,6 +129,6 @@ backend/python/load_testing/env
 backend_main/backend_main.rar
 sql/sql.rar
 *.rar
-.env
 python/load_testing/env/*
+.env
 .env
