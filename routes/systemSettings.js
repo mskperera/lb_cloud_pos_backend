@@ -8,6 +8,7 @@ const {
   drp_timezones_ctrl,
   drp_countries_ctrl,
   drp_languages_ctrl,
+  getSystemInfo_ctrl,
 } = require("../controllers/systemSettings");
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, roleMiddleware } = require("../middlewares/auth");
@@ -69,6 +70,14 @@ router.get(
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   drp_languages_ctrl
+);
+
+router.get(
+  "/systemInfo/getSystemInfo",
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getSystemInfo_ctrl
 );
 
 

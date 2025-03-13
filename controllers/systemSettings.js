@@ -1,5 +1,5 @@
 
-const { system_info_save, initialize_systemData, isSystemDataExists_sql, drp_currencies_sql, drp_timezones_select_sql, drp_countries_select_sql, drp_languages_select_sql } = require('../sql/systemSettings');
+const { system_info_save, initialize_systemData, isSystemDataExists_sql, drp_currencies_sql, drp_timezones_select_sql, drp_countries_select_sql, drp_languages_select_sql, getSystemInfo_sql } = require('../sql/systemSettings');
 
 
 exports.saveSystemInfo =async (req, res) => {
@@ -218,6 +218,23 @@ exports.drp_languages_ctrl = async (req, res) => {
   const userLogId=req.authUser.userLogId;
   try {
     const result = await drp_languages_select_sql(tenant,userLogId);
+    res.json(result);
+  } catch (err) {
+    console.log("Errori: ", err);
+    return res.status(400).json({
+      error: {
+        message: err.message,
+        name: err.name, // include other properties if needed
+        stack: err.stack,
+      },
+    });
+  }
+};
+
+exports.getSystemInfo_ctrl = async (req, res) => {
+  const tenant = req.tenant;
+  try {
+    const result = await getSystemInfo_sql(tenant);
     res.json(result);
   } catch (err) {
     console.log("Errori: ", err);
