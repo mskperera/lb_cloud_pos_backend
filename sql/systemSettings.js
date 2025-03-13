@@ -187,3 +187,33 @@ exports.initialize_systemData= async(tenant,userId,storeName,terminalName,
       throw error;
     }
   };
+
+
+
+  exports.getSystemInfo_sql = async (
+    tenant
+  ) => {
+    const { pool } = tenant;
+    try {
+      const procedureParameters = [];
+      const procedureOutputParameters = [];
+      const procedureName = "get_SystemInfo";
+      const result = await executeStoredProcedureWithOutputParamsByPool(
+        procedureName,
+        procedureParameters,
+        procedureOutputParameters,
+        pool
+      );
+      
+      const { responseStatus, outputMessage } = result.outputValues;
+      if (responseStatus === SP_STATUS.failed) {
+        throw { message: outputMessage };
+      }
+  
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  
