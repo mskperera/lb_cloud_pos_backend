@@ -6,7 +6,7 @@ exports.getUserAssignedStores_ctrl =async (req, res) => {
   const {userId } = req.query;
   const tenant=req.tenant;
 
-  console.log('tenant tenant tenant tenant.........&&&: ',tenant)
+  console.log('tenant Details ***** : ',tenant.tenantId)
 
   try {
   const result= await userAssignedStores_select_sql(tenant,userId);

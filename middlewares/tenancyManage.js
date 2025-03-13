@@ -16,8 +16,8 @@ exports.setTenant = async (req, res, next) => {
      const host = poolConfig.connectionConfig.host;
      const user = poolConfig.connectionConfig.user;
      const database = poolConfig.connectionConfig.database;
-     console.log('swiched to tenancy:',{user,database,tenantId:tenant.tenantId});
-     console.log('----------------------------------------');
+    // console.log('swiched to tenancy:',{user,database,tenantId:tenant.tenantId});
+     //console.log('----------------------------------------');
      next();
    } catch (error) {
      res.status(401).json({ 

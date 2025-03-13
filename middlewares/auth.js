@@ -29,7 +29,7 @@ exports.requireSignin = async (req, res, next) => {
 
 exports.authMiddleware = async (req, res, next) => {
   try {
-    console.log("authMiddleware **********",  req.authUser);
+   // console.log("authMiddleware **********",  req.authUser);
     next();
   } catch (error) {
     console.log("error ****:", error);
@@ -64,9 +64,9 @@ exports.authMiddleware = async (req, res, next) => {
 
 exports.roleMiddleware = (allowedRoles) => {
   return async (req, res, next) => {
-    console.log("roleMiddleware **********",  req.authUser);
+   // console.log("roleMiddleware **********",  req.authUser);
     const userRoleId = req.authUser?.userRoleId;
-console.log('userRoleId',userRoleId)
+
     // Check if userRoleId exist in the allowedRoles list
     if (!allowedRoles.includes(userRoleId)) {
       return res.status(403).json({ error: "Access denied. You do not have permission to access this resource." });

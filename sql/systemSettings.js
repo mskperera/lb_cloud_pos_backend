@@ -73,8 +73,7 @@ exports.initialize_systemData= async(tenant,userId,storeName,terminalName,
         procedureOutputParameters,
         pool
       );
-
-  console.log('result,ooooooo',result)
+      
       const { responseStatus, outputMessage } = result.outputValues;
       if (responseStatus === SP_STATUS.failed) {
         throw { message: outputMessage };
