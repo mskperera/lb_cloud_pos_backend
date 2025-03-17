@@ -1,7 +1,7 @@
 const io = require("socket.io-client");
 
 // Replace with your server's URL and port
-const socket = io("http://localhost:5112");
+const socket = io(process.env.SOCKET_IO_URL);
 
 // Log connection status
 socket.on("connect", () => {
