@@ -32,11 +32,7 @@ exports.productAdd_srv =async (
       };
     }
 
-    if (!reorderLevel) {
-      return {
-        error: { message: "reorderLevel is Required" },
-      };
-    }
+ 
 
     if (!measurementUnitId) {
       return {
@@ -78,6 +74,18 @@ exports.productAdd_srv =async (
       return {
         error: { message: "isExpiringProduct is Required" },
       };
+    }
+    
+      if(productTypeId===3){
+      
+           reorderLevel=null;
+    }
+    if(productTypeId!==3){
+         if (!reorderLevel) {
+      return {
+        error: { message: "reorderLevel is Required" },
+      };
+    }
     }
 
     if (productTypeId !== 2) {
@@ -242,13 +250,22 @@ exports.productUpdate_srv = async (
       error: { message: "isExpiringProduct is Required.." },
     };
   }
-  
-  if (!reorderLevel) {
-    return {
-      error: { message: "reorderLevel is Required" },
-    };
-  }
+ 
+           
+  if(productTypeId!==3){
+         if (!reorderLevel) {
+      return {
+        error: { message: "reorderLevel is Required" },
+      };
+    }
+    }
 
+
+       if(productTypeId===3){
+
+           reorderLevel=null;
+    }
+    
   // if (costPrice === null || costPrice === "") {
   //   return {
   //     error: { message: "costPrice is Required" },
