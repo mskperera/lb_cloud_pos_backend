@@ -255,6 +255,7 @@ exports.product_select_sql = async (
   brandId,
   storeId,
   productTypeIds,
+  isProductItem=false,
   productCategoryId,
   measurementUnitId,
   allSearchableFields=null,
@@ -279,6 +280,7 @@ exports.product_select_sql = async (
       brandId,
       storeId,
       productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
+      isProductItem,
       measurementUnitId,
       allSearchableFields,
       searchByKeyword,
