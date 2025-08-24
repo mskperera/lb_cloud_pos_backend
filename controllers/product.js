@@ -158,7 +158,7 @@ exports.product_Update =async (req, res) => {
 
 exports.getProducts =async (req, res) => {
    console.log('products_Select',req.body);
-  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+  const {productId,productNo, productName,productDescription, barcode,sku,brandId,storeId,productTypeIds,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
@@ -166,7 +166,7 @@ exports.getProducts =async (req, res) => {
   const pageName='p';
 
   try {
-  const result= await product_select_sql(tenant,productId,  productNo, productName,
+  const result= await product_select_sql(tenant,productId,  productNo, productName,productDescription,
     sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
     allSearchableFields,searchByKeyword,
     skip,limit, userLogId,utcOffset,pageName);
