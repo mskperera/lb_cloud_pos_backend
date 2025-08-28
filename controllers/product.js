@@ -1,5 +1,5 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql } = require('../sql/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -423,6 +423,29 @@ exports.getVariationTypes_drp =async (req, res) => {
   try {
   const result= await getVariationTypes_drp_sql(tenant, userLogId,utcOffset,pageName);
 
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getProductDetailsByInventoryId =async (req, res) => {
+
+  const {inventoryId} = req.query;
+  const tenant=req.tenant;
+
+  try {
+  const result= await get_ProductDetailsByInventoryId_sql(tenant,inventoryId);
+   // console.log('products_Select result',result.results);
       res.json(result);
 
 } catch (err) {
