@@ -56,9 +56,9 @@ exports.order_Insert = async (
     // console.log('executeStoredProcedureWithOutputParams',result);
     const { responseStatus, outputMessage } = result.outputValues;
     console.log("order_Insert result", result);
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
+    // if (responseStatus === SP_STATUS.failed) {
+    //   throw { message: outputMessage };
+    // }
 
     return result;
   } catch (error) {

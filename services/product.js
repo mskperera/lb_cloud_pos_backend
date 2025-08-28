@@ -76,17 +76,8 @@ exports.productAdd_srv =async (
       };
     }
     
-      if(productTypeId===3){
-      
-           reorderLevel=null;
-    }
-    if(productTypeId!==3){
-         if (!reorderLevel) {
-      return {
-        error: { message: "reorderLevel is Required" },
-      };
-    }
-    }
+  
+
 
     if (productTypeId !== 2) {
       if (!unitCost) {
@@ -251,20 +242,8 @@ exports.productUpdate_srv = async (
     };
   }
  
-           
-  if(productTypeId!==3){
-         if (!reorderLevel) {
-      return {
-        error: { message: "reorderLevel is Required" },
-      };
-    }
-    }
 
-
-       if(productTypeId===3){
-
-           reorderLevel=null;
-    }
+     
     
   // if (costPrice === null || costPrice === "") {
   //   return {

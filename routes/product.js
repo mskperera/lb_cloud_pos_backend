@@ -13,7 +13,8 @@ const {
   getVariationTypes_drp,
   getProductsAllVariations,
   getProductsPosMenu,
-  getVariationProductDetails_ctrl
+  getVariationProductDetails_ctrl,
+  getProductDetailsByInventoryId
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
@@ -129,6 +130,19 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getStores_ctrl
 );
+
+
+router.get(
+  '/product/productDetailsByInventoryId',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductDetailsByInventoryId
+);
+
+
+
+
 
 module.exports = router;
 

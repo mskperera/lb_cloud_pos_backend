@@ -595,3 +595,34 @@ exports.getVariationTypes_drp_sql = async (
     throw error;
   }
 };
+
+
+exports.get_ProductDetailsByInventoryId_sql = async (
+  tenant,
+  inventoryId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      inventoryId
+    ];
+    const procedureOutputParameters = [
+    ];
+    const procedureName = "get_ProductDetailsByInventoryId";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    // const { responseStatus, outputMessage } = result.outputValues;
+    // if (responseStatus === SP_STATUS.failed) {
+    //   throw { message: outputMessage };
+    // }
+
+    return result.results[0][0];
+  } catch (error) {
+    throw error;
+  }
+};
