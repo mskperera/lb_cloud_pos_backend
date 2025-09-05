@@ -1,5 +1,5 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql } = require('../sql/product');
+const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -11,6 +11,7 @@ exports.product_Add =async (req, res) => {
     categoryIdList,
     variationProductList,
     comboProductDetailList,
+    subProductsList,
     measurementUnitId,
 
     productTypeId,
@@ -19,6 +20,7 @@ exports.product_Add =async (req, res) => {
     isUnique,
     isStockTracked,
     isProductItem,
+    isAssemblyProduct,
     brandId,
     unitCost,unitPrice,taxPerc,
     sku,
@@ -35,7 +37,7 @@ console.log('body:',req.body);
   const result=  await productAdd_srv(
     tenant,
     tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
-    comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
+    comboProductDetailList,subProductsList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
     brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId);
 
 
@@ -73,6 +75,7 @@ exports.product_Update =async (req, res) => {
     categoryIdList,
     variationProductList,
     comboProductDetailList,
+    subProductsList,
     measurementUnitId,
     productTypeId,
     isNotForSelling,
@@ -80,6 +83,7 @@ exports.product_Update =async (req, res) => {
     isUnique,
     isStockTracked,
     isProductItem,
+    isAssemblyProduct,
     brandId,
     unitCost,unitPrice,taxPerc,
     sku,
@@ -108,6 +112,7 @@ exports.product_Update =async (req, res) => {
     categoryIdList,
     variationProductList,
     comboProductDetailList,
+    subProductsList,
     measurementUnitId,
     productTypeId,
     isNotForSelling,
@@ -115,6 +120,7 @@ exports.product_Update =async (req, res) => {
     isUnique,
     isStockTracked,
     isProductItem,
+    isAssemblyProduct,
     brandId,
     unitCost,unitPrice,taxPerc,
     sku,
@@ -324,6 +330,29 @@ exports.getProductExtraDetails =async (req, res) => {
 
   try {
   const result= await product_select_extraDetails_sql(tenant,productId);
+   // console.log('products_Select result',result.results);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+exports.getSubProductListOfAssemblyProduct_ctrl =async (req, res) => {
+
+  const {allProductId} = req.query;
+  console.log('allproductid',allProductId)
+  const tenant=req.tenant;
+
+  try {
+  const result= await getSubProductListOfAssemblyProduct_sql(tenant,allProductId);
    // console.log('products_Select result',result.results);
       res.json(result);
 

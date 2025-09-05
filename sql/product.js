@@ -12,6 +12,7 @@ exports.product_insertUpdate_sql = async (
   categoryIdList,
   variationProductList,
   comboProductDetailList,
+  subProductsList,
   measurementUnitId,
   productTypeId,
   isNotForSelling,
@@ -19,6 +20,7 @@ exports.product_insertUpdate_sql = async (
   isUnique,
 isStockTracked,
 isProductItem,
+isAssemblyProduct,
   brandId,
   unitCost,
       unitPrice,
@@ -38,6 +40,8 @@ isProductItem,
     const categoryIdList_json=JSON.stringify(categoryIdList);
     const variationProductList_json=JSON.stringify(variationProductList);
     const comboProductDetailList_json=JSON.stringify(comboProductDetailList);
+      const subProductsList_json=JSON.stringify(subProductsList);
+    
     const storeIdList_json=JSON.stringify(storeIdList);
 console.log('saveType',saveType);
     
@@ -51,6 +55,7 @@ console.log('saveType',saveType);
       categoryIdList_json,
       variationProductList_json,
       comboProductDetailList_json,
+      subProductsList_json,
       measurementUnitId,
       productTypeId,
       isNotForSelling,
@@ -58,6 +63,7 @@ console.log('saveType',saveType);
       isUnique,
       isStockTracked,
       isProductItem,
+      isAssemblyProduct,
       brandId,
        unitCost,
       unitPrice,
@@ -82,10 +88,8 @@ console.log('saveType',saveType);
     );
 
     const { responseStatus, outputMessage } = result.outputValues;
-    console.log('outputValues:', result);
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
+    console.log('result:', result);
+
 
     return result;
   } catch (error) {
@@ -415,6 +419,37 @@ exports.product_select_extraDetails_sql = async (
     throw error;
   }
 };
+
+exports.getSubProductListOfAssemblyProduct_sql = async (
+  tenant,
+  allProductId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      allProductId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "getSubProductListOfAssemblyProduct";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
 
 
 exports.product_availaleStores_select_sql = async (

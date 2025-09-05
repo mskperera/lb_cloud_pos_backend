@@ -284,7 +284,7 @@ exports.getStockInfo_sql = async (
 try {
   const {pool}=tenant;
   const procedureParameters = [inventoryId,showZeroStockQtyData];
-  const procedureOutputParameters = [];
+  const procedureOutputParameters = ["isSelectBatchManually"];
   const procedureName = "getStockInfo";
   const result = await executeStoredProcedureWithOutputParamsByPool(
     procedureName,
@@ -293,12 +293,9 @@ try {
     pool
   );
 
-  const { responseStatus, outputMessage } = result.outputValues;
-  if (responseStatus === SP_STATUS.failed) {
-    throw { message: outputMessage };
-  }
 
-  return result.results[0];
+
+  return result;
 } catch (error) {
   throw error;
 }

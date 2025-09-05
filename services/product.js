@@ -5,7 +5,7 @@ const { product_insertUpdate_sql } = require("../sql/product");
 exports.productAdd_srv =async ( 
   tenant,
   tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
-  comboProductDetailList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,
+  comboProductDetailList,subProductsList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
   brandId,unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId) => {
    
     if (!userLogId) {
@@ -78,27 +78,6 @@ exports.productAdd_srv =async (
     
   
 
-
-    if (productTypeId !== 2) {
-      if (!unitCost) {
-        return {
-          error: { message: "unitCost is Required" },
-        };
-      }
-
-      if (!unitPrice) {
-        return {
-          error: { message: "unitPrice is Required" },
-        };
-      }
-
-      if (!taxPerc) {
-        return {
-          error: { message: "taxPerc is Required" },
-        };
-      }
-    }
-
     const utcOffset = "5:30";
     const pageName = "p";
     const promptBeforeContinue = false;
@@ -116,6 +95,7 @@ exports.productAdd_srv =async (
         categoryIdList,
         variationProductList,
         comboProductDetailList,
+        subProductsList,
         measurementUnitId,
         productTypeId,
         isNotForSelling,
@@ -123,6 +103,7 @@ exports.productAdd_srv =async (
         isUnique,
         isStockTracked,
         isProductItem,
+        isAssemblyProduct,
         brandId,
         unitCost,
         unitPrice,
@@ -155,6 +136,7 @@ exports.productUpdate_srv = async (
   categoryIdList,
   variationProductList,
   comboProductDetailList,
+  subProductsList,
   measurementUnitId,
   productTypeId,
   isNotForSelling,
@@ -162,6 +144,7 @@ exports.productUpdate_srv = async (
   isUnique,
   isStockTracked,
   isProductItem,
+  isAssemblyProduct,
   brandId,
   unitCost,unitPrice,taxPerc,
   sku,
@@ -241,36 +224,7 @@ exports.productUpdate_srv = async (
       error: { message: "isExpiringProduct is Required.." },
     };
   }
- 
 
-     
-    
-  // if (costPrice === null || costPrice === "") {
-  //   return {
-  //     error: { message: "costPrice is Required" },
-  //   };
-  // }
-
-  if(productTypeId!==2){
-    if (!unitCost) {
-      return {
-        error: {message:"unitCost is Required"},
-      };
-    }
-
-    if (!unitPrice) {
-      return {
-        error: {message:"unitPrice is Required"},
-      };
-    }
-
-    if (!taxPerc) {
-      return {
-        error: {message:"taxPerc is Required"},
-      };
-    }
-
-  }
 
   try {
     const result = await product_insertUpdate_sql(
@@ -283,6 +237,7 @@ exports.productUpdate_srv = async (
       categoryIdList,
       variationProductList,
       comboProductDetailList,
+      subProductsList,
       measurementUnitId,
       productTypeId,
       isNotForSelling,
@@ -290,6 +245,7 @@ exports.productUpdate_srv = async (
       isUnique,
       isStockTracked,
       isProductItem,
+      isAssemblyProduct,
       brandId,
       unitCost,unitPrice,taxPerc,
       sku,

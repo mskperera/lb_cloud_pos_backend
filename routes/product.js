@@ -14,7 +14,8 @@ const {
   getProductsAllVariations,
   getProductsPosMenu,
   getVariationProductDetails_ctrl,
-  getProductDetailsByInventoryId
+  getProductDetailsByInventoryId,
+  getSubProductListOfAssemblyProduct_ctrl
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
@@ -105,6 +106,13 @@ router.get(
   getProductExtraDetails
 );
 
+router.get(
+  '/product/sub-products',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getSubProductListOfAssemblyProduct_ctrl
+);
 
 router.post(
   '/product/getProductAvailaleStores',
