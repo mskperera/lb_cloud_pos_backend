@@ -163,6 +163,7 @@ exports.product_select_pos_menu_sql = async (
   barcode,
   brandId,
   storeId,
+  terminalId,
   productTypeIds,
   productCategoryId,
   measurementUnitId,
@@ -186,6 +187,7 @@ exports.product_select_pos_menu_sql = async (
       productCategoryId,
       brandId,
       storeId,
+      terminalId,
       productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
       measurementUnitId,
       allSearchableFields,

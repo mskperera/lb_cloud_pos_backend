@@ -193,7 +193,7 @@ exports.getProducts =async (req, res) => {
 
 
 exports.getProductsPosMenu =async (req, res) => {
-  const {productId,productNo, productName, barcode,sku,brandId,storeId,productTypeIds,
+  const {productId,productNo, productName, barcode,sku,brandId,storeId,terminalId,productTypeIds,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
@@ -202,7 +202,7 @@ exports.getProductsPosMenu =async (req, res) => {
 
   try {
   const result= await product_select_pos_menu_sql(tenant,productId,  productNo, productName,
-    sku,barcode,brandId,storeId,productTypeIds,categoryId,measurementUnitId,
+    sku,barcode,brandId,storeId,terminalId,productTypeIds,categoryId,measurementUnitId,
     allSearchableFields,searchByKeyword,
     skip,limit, userLogId,utcOffset,pageName);
       res.json(result);
