@@ -4,7 +4,7 @@ const {
   getSessionEndDetails_srv,
   get_latest_Session_details_srv,
 } = require("../services/session");
-const { drp_session_select, drp_session_select_sql } = require("../sql/session");
+const { drp_session_select, drp_session_select_sql, sessionMismatchCheck_sql } = require("../sql/session");
 const { stringToBoolean } = require("../utils/utils");
 
 
@@ -177,6 +177,33 @@ exports.get_latest_Session_details_ctrl = async (req, res) => {
     res.status(200).json(sessionEndDetailsRes);
   } catch (err) {
     console.log("getSessionEndDetails_ctrl() -> error: ", err);
+    res
+      .status(500)
+      .json({
+        error: "Something is wrong, please contact the service provider.",
+      });
+  }
+};
+
+
+
+exports.getSessionMismatchCheck_ctrl = async (req, res) => {
+  const { sessionId,terminalId } = req.query;
+  const tenant = req.tenant;
+
+  try {
+    const sessionEndDetailsRes = await sessionMismatchCheck_sql(
+      tenant,
+      sessionId,
+      terminalId
+    );
+    if (sessionEndDetailsRes.exception) {
+      return res.status(400).json(sessionEndDetailsRes);
+    }
+
+    res.status(200).json(sessionEndDetailsRes);
+  } catch (err) {
+    console.log("getSessionMismatchCheck_ctrl() -> error: ", err);
     res
       .status(500)
       .json({

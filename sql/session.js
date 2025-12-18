@@ -280,3 +280,51 @@ exports.Session_get_latest_Session_details_sql = async (
     throw error;
   }
 };
+
+
+
+
+
+exports.sessionMismatchCheck_sql = async (
+  tenant,
+  sessionId,
+  terminalId
+) => {
+  const functionName = "sessionMismatchCheck_sql()";
+  try {
+    const { pool } = tenant;
+    const procedureParameters = [
+      sessionId,
+      terminalId
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+      "isSessionMismatched"
+    ];
+    const procedureName = "sessionMismatchCheck";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    const { responseStatus, outputMessage } = result.outputValues;
+    if (responseStatus === SP_STATUS.failed) {
+      console.log(
+        consoleExceptionText,
+        `${functionName} -> exception:`,
+        outputMessage
+      );
+      return { exception: { message: outputMessage } };
+    }
+
+    const message = outputMessage;
+    console.log(consoleSuccessText, `${functionName} -> success: ${message} `);
+    return { message,records: result.results[0], values: result.outputValues };
+  } catch (error) {
+    console.error(consoleErrorText, `${functionName} -> error :`, error);
+    throw error;
+  }
+};

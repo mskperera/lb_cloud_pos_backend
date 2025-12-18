@@ -6,6 +6,7 @@ const {
   getSessionEndDetails_ctrl,
   getDrpSession_ctrl,
   get_latest_Session_details_ctrl,
+  getSessionMismatchCheck_ctrl,
 } = require("../controllers/session");
 const { setTenant } = require("../middlewares/tenancyManage");
 const {
@@ -51,5 +52,15 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
   get_latest_Session_details_ctrl
 );
+
+
+router.get(
+  "/session/mismatchCheck/get",
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  getSessionMismatchCheck_ctrl
+);
+
 
 module.exports = router;
