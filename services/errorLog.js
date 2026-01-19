@@ -1,6 +1,6 @@
 const { error_log_insert } = require("../sql/operational");
 
-exports.add_error_log = async (
+exports.add_error_log_srv = async (
     user,
     activity,
     err,

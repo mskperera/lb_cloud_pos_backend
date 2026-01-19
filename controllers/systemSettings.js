@@ -25,116 +25,112 @@ exports.saveSystemInfo =async (req, res) => {
 }
 };
 
+exports.validateInitializeSystemData = (data) => {
+  if (!data.storeName) return 'Store name is required';
+  if (!data.terminalName) return 'Terminal name is required';
+  if (!data.currencyId) return 'Currency is required';
+  if (!data.timeZoneId) return 'Time zone is required';
+  if (!data.utcOffset) return 'UTC offset is required';
+  if (!data.countryCode) return 'Country code is required';
+  if (!data.countryName) return 'Country name is required';
+  if (!data.languageId) return 'Language is required';
+  if (!data.companyName) return 'Company name is required';
+  if (!data.address) return 'Address is required';
+  if (!data.city) return 'City is required';
+  if (!data.province) return 'Province is required';
+  if (!data.emailAddress) return 'Email address is required';
+  if (!data.tel1) return 'Telephone 1 is required';
+ // if (!data.tel2) return 'Telephone 2 is required';
 
-exports.initializeSystemData_ctrl =async (req, res) => {
-  const {userId,storeName,terminalName,currencyId,timeZoneId,utcOffset,countryId,
-    languageId,companyhName
-   ,address,city,province,emailAddress,tel1,tel2
+  return null;
+};
+
+
+exports.initializeSystemData_ctrl = async (req, res) => {
+  const {
+    storeName,
+    terminalName,
+    currencyId,
+    timeZoneId,
+    utcOffset,
+    countryCode,
+    countryName,
+    languageId,
+    companyName,
+    address,
+    city,
+    province,
+    emailAddress,
+    tel1,
+    tel2
   } = req.body;
-  
-  const tenant=req.tenant;
-  const userLogId=req.authUser.userLogId;
 
+  const tenant = req.tenant;
+  const userLogId = req.authUser.userLogId;
 
+  console.log('tenant:',tenant)
 
-  if (!userId) {
-    return res.status(422).json({
-      error: {message:"userId is Required"},
-    });
-  }
+  // ✅ Validation
+  const requiredFields = {
+    storeName,
+    terminalName,
+    currencyId,
+    timeZoneId,
+    utcOffset,
+    countryCode,
+    countryName,
+    languageId,
+    companyName,
+    address,
+    city,
+    province,
+    emailAddress,
+    tel1,
+    tel2
+  };
 
-  if (!storeName) {
-    return res.status(422).json({
-      error: {message:"storeName is Required"},
-    });
-  }
+ const validationError = this.validateInitializeSystemData(req.body);
 
-  if (!terminalName) {
-    return res.status(422).json({
-      error: {message:"terminalName is Required"},
-    });
-  }
-  if (!currencyId) {
-    return res.status(422).json({
-      error: {message:"currencyId is Required"},
-    });
-  }
-  if (!timeZoneId) {
-    return res.status(422).json({
-      error: {message:"timeZoneId is Required"},
-    });
-  }
-  if (!utcOffset) {
-    return res.status(422).json({
-      error: {message:"utcOffset is Required"},
-    });
-  }
-  if (!countryId) {
-    return res.status(422).json({
-      error: {message:"countryId is Required"},
-    });
-  }
-
-  if (!languageId) {
-    return res.status(422).json({
-      error: {message:"languageId is Required"},
-    });
-  }
-  if (!companyhName) {
-    return res.status(422).json({
-      error: {message:"companyhName is Required"},
-    });
-  }
-
-  if (!address) {
-    return res.status(422).json({
-      error: {message:"address is Required"},
-    });
-  }
-  if (!city) {
-    return res.status(422).json({
-      error: {message:"city is Required"},
-    });
-  }
-  if (!province) {
-    return res.status(422).json({
-      error: {message:"province is Required"},
-    });
-  }
-  if (!emailAddress) {
-    return res.status(422).json({
-      error: {message:"emailAddress is Required"},
-    });
-  }
-  if (!tel1) {
-    return res.status(422).json({
-      error: {message:"tel1 is Required"},
-    });
-  }
-  if (!tel2) {
-    return res.status(422).json({
-      error: {message:"tel2 is Required"},
-    });
-  }
-
-
-  try {
-  const result=  await initialize_systemData(tenant,userId,storeName,terminalName,
-    currencyId,timeZoneId,utcOffset,countryId,languageId,companyhName,
-   address,city,province,emailAddress,tel1,tel2,
-    userLogId);
-    res.json(result);
-
-} catch (err) {
-  console.log('Errori: ',err)
-  return res.status(400).json({ 
-    error: {
-      message: err.message,
-      name: err.name, // include other properties if needed
-      stack: err.stack
-    }
+if (validationError) {
+  return res.status(422).json({
+    error: { message: validationError }
   });
 }
+
+  try {
+    const result = await initialize_systemData(
+      tenant,
+      storeName,
+      terminalName,
+      currencyId,
+      timeZoneId,
+      utcOffset,
+      countryCode,
+      countryName,
+      languageId,
+      companyName,
+      address,
+      city,
+      province,
+      emailAddress,
+      tel1,
+      tel2,
+      userLogId
+    );
+
+    return res.json(result);
+
+  } catch (err) {
+    console.error('Error: ', err);
+  //  add_error_log_srv()
+    return res.status(400).json({
+      error: {
+        message: err.message,
+        name: err.name,
+        stack: err.stack
+      }
+    });
+  }
 };
 
 
@@ -176,60 +172,8 @@ exports.drp_currencies_ctrl = async (req, res) => {
   }
 };
 
-exports.drp_timezones_ctrl = async (req, res) => {
-  const tenant = req.tenant;
-  const userLogId=req.authUser.userLogId;
-  try {
-    const result = await drp_timezones_select_sql(tenant,userLogId);
-    res.json(result);
-  } catch (err) {
-    console.log("Errori: ", err);
-    return res.status(400).json({
-      error: {
-        message: err.message,
-        name: err.name, // include other properties if needed
-        stack: err.stack,
-      },
-    });
-  }
-};
 
 
-exports.drp_countries_ctrl = async (req, res) => {
-  const tenant = req.tenant;
-  const userLogId=req.authUser.userLogId;
-  try {
-    const result = await drp_countries_select_sql(tenant,userLogId);
-    res.json(result);
-  } catch (err) {
-    console.log("Errori: ", err);
-    return res.status(400).json({
-      error: {
-        message: err.message,
-        name: err.name, // include other properties if needed
-        stack: err.stack,
-      },
-    });
-  }
-};
-
-exports.drp_languages_ctrl = async (req, res) => {
-  const tenant = req.tenant;
-  const userLogId=req.authUser.userLogId;
-  try {
-    const result = await drp_languages_select_sql(tenant,userLogId);
-    res.json(result);
-  } catch (err) {
-    console.log("Errori: ", err);
-    return res.status(400).json({
-      error: {
-        message: err.message,
-        name: err.name, // include other properties if needed
-        stack: err.stack,
-      },
-    });
-  }
-};
 
 exports.getSystemInfo_ctrl = async (req, res) => {
   const tenant = req.tenant;

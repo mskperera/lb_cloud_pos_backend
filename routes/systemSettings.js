@@ -48,29 +48,8 @@ router.get(
   drp_currencies_ctrl
 );
 
-router.get(
-  "/dropdown/timezones",
-  setTenant,
-  requireSignin,
-  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
-  drp_timezones_ctrl
-);
 
-router.get(
-  "/dropdown/countries",
-  setTenant,
-  requireSignin,
-  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
-  drp_countries_ctrl
-);
 
-router.get(
-  "/dropdown/languages",
-  setTenant,
-  requireSignin,
-  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
-  drp_languages_ctrl
-);
 
 router.get(
   "/systemInfo/getSystemInfo",
