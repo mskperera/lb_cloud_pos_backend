@@ -4,9 +4,9 @@ const { product_insertUpdate_sql } = require("../sql/product");
 
 exports.productAdd_srv =async ( 
   tenant,
-  tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
-  comboProductDetailList,subProductsList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
-  brandId,unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId) => {
+  tableId,storeIdList,productName,categoryIdList, variationProductList,
+  measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
+  brandId,reorderLevel,isExpiringProduct,userLogId) => {
    
     if (!userLogId) {
       return {
@@ -14,11 +14,7 @@ exports.productAdd_srv =async (
       };
     }
 
-    if (!productNo) {
-      return {
-        error: { message: "productNo is Required" },
-      };
-    }
+   
 
     if (!productName) {
       return {
@@ -89,13 +85,10 @@ exports.productAdd_srv =async (
         tenant,
         tableId,
         storeIdList,
-        productNo,
-        isProductNoAutoGenerate,
         productName,
         categoryIdList,
         variationProductList,
-        comboProductDetailList,
-        subProductsList,
+
         measurementUnitId,
         productTypeId,
         isNotForSelling,
@@ -105,11 +98,6 @@ exports.productAdd_srv =async (
         isProductItem,
         isAssemblyProduct,
         brandId,
-        unitCost,
-        unitPrice,
-        taxPerc,
-        sku,
-        barcode,
         reorderLevel,
         isExpiringProduct,
         saveType,
@@ -130,13 +118,9 @@ exports.productUpdate_srv = async (
   tenant,
   tableId,
   storeIdList,
-  productNo,
-  isProductNoAutoGenerate,
   productName,
   categoryIdList,
   variationProductList,
-  comboProductDetailList,
-  subProductsList,
   measurementUnitId,
   productTypeId,
   isNotForSelling,
@@ -146,9 +130,6 @@ exports.productUpdate_srv = async (
   isProductItem,
   isAssemblyProduct,
   brandId,
-  unitCost,unitPrice,taxPerc,
-  sku,
-  barcode,
   reorderLevel,
   isExpiringProduct,
   userLogId
@@ -231,13 +212,9 @@ exports.productUpdate_srv = async (
       tenant,
       tableId,
       storeIdList,
-      productNo,
-      isProductNoAutoGenerate,
       productName,
       categoryIdList,
       variationProductList,
-      comboProductDetailList,
-      subProductsList,
       measurementUnitId,
       productTypeId,
       isNotForSelling,
@@ -247,9 +224,6 @@ exports.productUpdate_srv = async (
       isProductItem,
       isAssemblyProduct,
       brandId,
-      unitCost,unitPrice,taxPerc,
-      sku,
-      barcode,
       reorderLevel,
       isExpiringProduct,
       saveType,

@@ -1,17 +1,13 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql, product_insertUpdate_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
+const { product_delete, product_select_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
     tableId,
     storeIdList,
-    productNo,
-    isProductNoAutoGenerate,
     productName,
     categoryIdList,
     variationProductList,
-    comboProductDetailList,
-    subProductsList,
     measurementUnitId,
 
     productTypeId,
@@ -22,9 +18,7 @@ exports.product_Add =async (req, res) => {
     isProductItem,
     isAssemblyProduct,
     brandId,
-    unitCost,unitPrice,taxPerc,
-    sku,
-    barcode,
+
     reorderLevel,
     isExpiringProduct
   } = req.body;
@@ -36,9 +30,9 @@ console.log('body:',req.body);
   try {
   const result=  await productAdd_srv(
     tenant,
-    tableId,storeIdList, productNo,isProductNoAutoGenerate,productName,categoryIdList, variationProductList,
-    comboProductDetailList,subProductsList,measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
-    brandId,  unitCost,unitPrice,taxPerc,sku,barcode,reorderLevel,isExpiringProduct,userLogId);
+    tableId,storeIdList,productName,categoryIdList, variationProductList,
+    measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
+    brandId,reorderLevel,isExpiringProduct,userLogId);
 
 
 if(result.error){
@@ -69,13 +63,9 @@ exports.product_Update =async (req, res) => {
 
   const {
     storeIdList,
-    productNo,
-    isProductNoAutoGenerate,
     productName,
     categoryIdList,
     variationProductList,
-    comboProductDetailList,
-    subProductsList,
     measurementUnitId,
     productTypeId,
     isNotForSelling,
@@ -85,9 +75,6 @@ exports.product_Update =async (req, res) => {
     isProductItem,
     isAssemblyProduct,
     brandId,
-    unitCost,unitPrice,taxPerc,
-    sku,
-    barcode,
     reorderLevel,
     isExpiringProduct
   } = req.body;
@@ -106,13 +93,9 @@ exports.product_Update =async (req, res) => {
     tenant,
     tableId,
     storeIdList,
-    productNo,
-   isProductNoAutoGenerate,
     productName,
     categoryIdList,
     variationProductList,
-    comboProductDetailList,
-    subProductsList,
     measurementUnitId,
     productTypeId,
     isNotForSelling,
@@ -122,9 +105,6 @@ exports.product_Update =async (req, res) => {
     isProductItem,
     isAssemblyProduct,
     brandId,
-    unitCost,unitPrice,taxPerc,
-    sku,
-    barcode,
     reorderLevel,
     isExpiringProduct,
     userLogId
@@ -150,15 +130,6 @@ exports.product_Update =async (req, res) => {
   });
 }
 };
-
-
-
-
-
-
-
-
-
 
 
 

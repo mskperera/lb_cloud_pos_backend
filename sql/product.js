@@ -6,13 +6,9 @@ exports.product_insertUpdate_sql = async (
   tenant,
   tableId,
   storeIdList,
-  productNo,
-  isProductNoAutoGenerate,
   productName,
   categoryIdList,
   variationProductList,
-  comboProductDetailList,
-  subProductsList,
   measurementUnitId,
   productTypeId,
   isNotForSelling,
@@ -22,11 +18,6 @@ isStockTracked,
 isProductItem,
 isAssemblyProduct,
   brandId,
-  unitCost,
-      unitPrice,
-      taxPerc,
-  sku,
-  barcode,
   reorderLevel,
   isExpiringProduct,
   saveType,
@@ -39,8 +30,6 @@ isAssemblyProduct,
 
     const categoryIdList_json=JSON.stringify(categoryIdList);
     const variationProductList_json=JSON.stringify(variationProductList);
-    const comboProductDetailList_json=JSON.stringify(comboProductDetailList);
-      const subProductsList_json=JSON.stringify(subProductsList);
     
     const storeIdList_json=JSON.stringify(storeIdList);
 console.log('saveType',saveType);
@@ -49,13 +38,11 @@ console.log('saveType',saveType);
     const procedureParameters = [
       tableId,
       storeIdList_json,
-      productNo.trim(),
-      isProductNoAutoGenerate,
+
       productName.trim(),
       categoryIdList_json,
       variationProductList_json,
-      comboProductDetailList_json,
-      subProductsList_json,
+
       measurementUnitId,
       productTypeId,
       isNotForSelling,
@@ -65,11 +52,6 @@ console.log('saveType',saveType);
       isProductItem,
       isAssemblyProduct,
       brandId,
-       unitCost,
-      unitPrice,
-      taxPerc,
-      sku?.trim(),
-      barcode?.trim(),
       reorderLevel,
       isExpiringProduct,
       saveType,
