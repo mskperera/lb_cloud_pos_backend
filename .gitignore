@@ -77,7 +77,6 @@ web_modules/
 .env.test.local
 .env.production.local
 .env.local
-.env
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
@@ -132,8 +131,4 @@ sql/sql.rar
 *.rar
 python/load_testing/env/*
 .env
-.env
-.env
-.env
-.env
-.env
+
