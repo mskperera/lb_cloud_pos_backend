@@ -22,7 +22,7 @@ jobs:
 
   deploy:  # CD: Deploy to Server
   #  needs: test  # Only deploy if tests pass
-    runs-on: [self-hosted,legendbyte-server, lb-backend]  # Target your self-hosted runner (use the label you set)
+    runs-on: [self-hosted]  # Target your self-hosted runner (use the label you set)
     steps:
       - uses: actions/checkout@v4
 
