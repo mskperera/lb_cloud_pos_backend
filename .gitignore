@@ -130,6 +130,3 @@ backend_main/backend_main.rar
 sql/sql.rar
 *.rar
 python/load_testing/env/*
-.env
-
-.env
