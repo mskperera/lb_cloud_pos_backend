@@ -10,7 +10,6 @@ const morgan = require('morgan');
 const { readdirSync } = require('fs');
 
 //test();
-
 module.exports=app;
 // //connection string
 // var connectionString = process.env.DATABASE_MSSQL;
