@@ -1,4 +1,4 @@
-name: CI/CD for Node.js App
+name: CI/CD for lbpos backend
 
 on:
   push:
