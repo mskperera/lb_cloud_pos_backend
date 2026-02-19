@@ -41,6 +41,6 @@ jobs:
           sudo rsync -a --exclude='.git' ./ $DEPLOY_DIR/  # Copy code to deploy dir (exclude Git)
           cd $DEPLOY_DIR
           npm install  # Re-install deps in deploy dir if needed
-          sudo pm2 reload lbpos-backend  # Restart app (assume PM2 ecosystem file or name 'posbackend')
+          pm2 reload lbpos-backend  # Restart app (assume PM2 ecosystem file or name 'posbackend')
           # Or if using systemd: sudo systemctl restart your-app.service
  
