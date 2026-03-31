@@ -11,11 +11,13 @@ const { consoleSuccessText, consoleErrorText, consoleExceptionText } =
 exports.drp_teminallByUserId = async (
   tenant,
   userId,
+  storeId
 ) => {
   const { pool } = tenant;
   try {
     const procedureParameters = [
-      userId
+      userId,
+      storeId
     ];
     const procedureOutputParameters = [
       "responseStatus",
