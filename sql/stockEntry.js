@@ -568,3 +568,33 @@ exports.get_inventory_transation_history_sql = async (
   }
 };
 
+
+
+
+
+exports.getStockInfoBy_allProductId_storeId_sql = async (
+  tenant,
+  allProductId,
+  storeId
+) => {
+
+  console.log('getStockInfoBy_allProductId_storeId_sql called with allProductId:', allProductId, 'storeId:', storeId);
+try {
+  const {pool}=tenant;
+  const procedureParameters = [allProductId, storeId];
+  const procedureOutputParameters = [];
+  const procedureName = "getStockInfoBy_allProductId_storeId";
+  const result = await executeStoredProcedureWithOutputParamsByPool(
+    procedureName,
+    procedureParameters,
+    procedureOutputParameters,
+    pool
+  );
+
+
+
+  return result;
+} catch (error) {
+  throw error;
+}
+};

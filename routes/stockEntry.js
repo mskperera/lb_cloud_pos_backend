@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, roleMiddleware } = require("../middlewares/auth");
-const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl, getInventoryTransactionHistory_ctrl } = require("../controllers/stockEntry");
+const { stockAdd, getStockEntries, getStockEntryFullbyStockEntryId, stockEntryVoid, getStockEntryVoidingReason_dropdown, getStockInfo_ctrl, stockAdjust_ctrl, getStockAdjustments_ctrl, getAdjustmentReasons_dropdown_ctrl, update_price_cost_ctrl, getPriceChange_ctrl, releaseStockBatch_ctrl, getInventoryTransactionHistory_ctrl, getStockInfoBy_allProductId_storeId_ctrl } = require("../controllers/stockEntry");
 const { USER_ROLE } = require("../utils/constants");
 
 router.post(
@@ -110,6 +110,14 @@ router.post(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getInventoryTransactionHistory_ctrl
 );
+
+router.get('/stock/stockInfoBy_allProductId_storeId',
+    setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+   getStockInfoBy_allProductId_storeId_ctrl);
+
+
 
 
 module.exports = router;

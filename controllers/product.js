@@ -1,5 +1,9 @@
 const { productAdd_srv, productUpdate_srv } = require('../services/product');
-const { product_delete, product_select_sql,getProductTypes_drp_sql, product_select_extraDetails_sql, product_availaleStores_select_sql, product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
+const { product_delete, product_select_sql,getProductTypes_drp_sql,
+   product_select_extraDetails_sql, product_availaleStores_select_sql, 
+   product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, 
+   Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, 
+   get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -459,3 +463,5 @@ exports.getProductDetailsByInventoryId =async (req, res) => {
   });
 }
 };
+
+
