@@ -15,7 +15,8 @@ const {
   getProductsPosMenu,
   getVariationProductDetails_ctrl,
   getProductDetailsByInventoryId,
-  getSubProductListOfAssemblyProduct_ctrl
+  getSubProductListOfAssemblyProduct_ctrl,
+  getInventoryLastPricing
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
@@ -147,6 +148,16 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getProductDetailsByInventoryId
 );
+
+
+router.get(
+  '/product/inventoryLastPricing',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getInventoryLastPricing
+);
+
 
 
 

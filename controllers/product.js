@@ -3,7 +3,8 @@ const { product_delete, product_select_sql,getProductTypes_drp_sql,
    product_select_extraDetails_sql, product_availaleStores_select_sql, 
    product_nonSerializedItemsSelect_sql, drp_stores_select_sql, getVariationTypes_drp_sql, 
    Product_Select_all_variations_sql, product_select_pos_menu_sql, getVariationProductDetails_sql, 
-   get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql } = require('../sql/product');
+   get_ProductDetailsByInventoryId_sql, getSubProductListOfAssemblyProduct_sql, 
+   Inventory_Get_LatestPricing_sql} = require('../sql/product');
 
 exports.product_Add =async (req, res) => {
   const {
@@ -21,6 +22,7 @@ exports.product_Add =async (req, res) => {
     isStockTracked,
     isProductItem,
     isAssemblyProduct,
+    isBatchTracked,
     brandId,
 
     reorderLevel,
@@ -36,6 +38,7 @@ console.log('body:',req.body);
     tenant,
     tableId,storeIdList,productName,categoryIdList, variationProductList,
     measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
+    isBatchTracked,
     brandId,reorderLevel,isExpiringProduct,userLogId);
 
 
@@ -78,6 +81,7 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     isAssemblyProduct,
+    isBatchTracked,
     brandId,
     reorderLevel,
     isExpiringProduct
@@ -108,6 +112,7 @@ exports.product_Update =async (req, res) => {
     isStockTracked,
     isProductItem,
     isAssemblyProduct,
+    isBatchTracked,
     brandId,
     reorderLevel,
     isExpiringProduct,
@@ -139,7 +144,9 @@ exports.product_Update =async (req, res) => {
 
 exports.getProducts =async (req, res) => {
    console.log('products_Select',req.body);
-  const {productId,productNo, productName,productDescription, barcode,sku,brandId,storeId,productTypeIds,isProductItem,
+  const {productId,productNo, productName,productDescription, barcode,sku,brandId,
+    storeId,productTypeIds,isProductItem,
+    isStockTracked,isExpiringProduct,isBatchTracked,
     categoryId,measurementUnitId,allSearchableFields,searchByKeyword,limit,skip } = req.body;
   const tenant=req.tenant;
   const utcOffset='5:30';
@@ -148,7 +155,9 @@ exports.getProducts =async (req, res) => {
 
   try {
   const result= await product_select_sql(tenant,productId,  productNo, productName,productDescription,
-    sku,barcode,brandId,storeId,productTypeIds,isProductItem,categoryId,measurementUnitId,
+    sku,barcode,brandId,storeId,productTypeIds,isProductItem,
+      isStockTracked,isExpiringProduct,isBatchTracked
+    ,categoryId,measurementUnitId,
     allSearchableFields,searchByKeyword,
     skip,limit, userLogId,utcOffset,pageName);
    // console.log('products_Select result',result.results);
@@ -449,6 +458,29 @@ exports.getProductDetailsByInventoryId =async (req, res) => {
 
   try {
   const result= await get_ProductDetailsByInventoryId_sql(tenant,inventoryId);
+   // console.log('products_Select result',result.results);
+      res.json(result);
+
+} catch (err) {
+  console.log('Errori: ',err)
+  return res.status(400).json({ 
+    error: {
+      message: err.message,
+      name: err.name, // include other properties if needed
+      stack: err.stack
+    }
+  });
+}
+};
+
+
+exports.getInventoryLastPricing =async (req, res) => {
+
+  const {inventoryId} = req.query;
+  const tenant=req.tenant;
+
+  try {
+  const result= await Inventory_Get_LatestPricing_sql(tenant,inventoryId);
    // console.log('products_Select result',result.results);
       res.json(result);
 

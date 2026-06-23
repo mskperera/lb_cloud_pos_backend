@@ -17,6 +17,7 @@ exports.product_insertUpdate_sql = async (
 isStockTracked,
 isProductItem,
 isAssemblyProduct,
+isBatchTracked,
   brandId,
   reorderLevel,
   isExpiringProduct,
@@ -51,6 +52,7 @@ console.log('saveType',saveType);
       isStockTracked,
       isProductItem,
       isAssemblyProduct,
+      isBatchTracked,
       brandId,
       reorderLevel,
       isExpiringProduct,
@@ -244,6 +246,9 @@ exports.product_select_sql = async (
   storeId,
   productTypeIds,
   isProductItem=false,
+
+  isStockTracked,isExpiringProduct,isBatchTracked,
+
   productCategoryId,
   measurementUnitId,
   allSearchableFields=null,
@@ -269,6 +274,7 @@ exports.product_select_sql = async (
       storeId,
       productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
       isProductItem,
+        isStockTracked,isExpiringProduct,isBatchTracked,
       measurementUnitId,
       allSearchableFields,
       searchByKeyword,
@@ -647,3 +653,32 @@ exports.get_ProductDetailsByInventoryId_sql = async (
 };
 
 
+exports.Inventory_Get_LatestPricing_sql = async (
+  tenant,
+  inventoryId
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      inventoryId
+    ];
+    const procedureOutputParameters = [
+    ];
+    const procedureName = "Inventory_Get_LatestPricing";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    // const { responseStatus, outputMessage } = result.outputValues;
+    // if (responseStatus === SP_STATUS.failed) {
+    //   throw { message: outputMessage };
+    // }
+
+    return result.results[0][0];
+  } catch (error) {
+    throw error;
+  }
+};

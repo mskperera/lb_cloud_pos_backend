@@ -5,7 +5,7 @@ const { product_insertUpdate_sql } = require("../sql/product");
 exports.productAdd_srv =async ( 
   tenant,
   tableId,storeIdList,productName,categoryIdList, variationProductList,
-  measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,
+  measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,isBatchTracked,
   brandId,reorderLevel,isExpiringProduct,userLogId) => {
    
     if (!userLogId) {
@@ -97,6 +97,7 @@ exports.productAdd_srv =async (
         isStockTracked,
         isProductItem,
         isAssemblyProduct,
+        isBatchTracked,
         brandId,
         reorderLevel,
         isExpiringProduct,
@@ -129,6 +130,7 @@ exports.productUpdate_srv = async (
   isStockTracked,
   isProductItem,
   isAssemblyProduct,
+  isBatchTracked,
   brandId,
   reorderLevel,
   isExpiringProduct,
@@ -223,6 +225,7 @@ exports.productUpdate_srv = async (
       isStockTracked,
       isProductItem,
       isAssemblyProduct,
+      isBatchTracked,
       brandId,
       reorderLevel,
       isExpiringProduct,

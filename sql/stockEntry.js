@@ -47,12 +47,7 @@ exports.stockEntry_Insert = async (
 
     //checkForSQlError(result);
     console.log("stock_Insert result", result.results);
-    // console.log('executeStoredProcedureWithOutputParams',result);
-    const { responseStatus, outputMessage } = result.outputValues;
- 
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
+
 
     return result;
   } catch (error) {
@@ -582,7 +577,7 @@ exports.getStockInfoBy_allProductId_storeId_sql = async (
 try {
   const {pool}=tenant;
   const procedureParameters = [allProductId, storeId];
-  const procedureOutputParameters = [];
+  const procedureOutputParameters = ["isBatchTracked"];
   const procedureName = "getStockInfoBy_allProductId_storeId";
   const result = await executeStoredProcedureWithOutputParamsByPool(
     procedureName,

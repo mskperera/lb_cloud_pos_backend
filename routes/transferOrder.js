@@ -3,10 +3,10 @@ const router = express.Router();
 const { setTenant } = require("../middlewares/tenancyManage");
 const { requireSignin, roleMiddleware } = require("../middlewares/auth");
 const { USER_ROLE } = require("../utils/constants");
-const { transferOrderAdd_ctrl, transferOrderUpdate_ctrl, getTransferOrders_ctrl, getTransferOrderById_ctrl } = require("../controllers/transferOrder");
+const { transferOrderAdd_ctrl, transferOrderUpdate_ctrl, getTransferOrders_ctrl, getTransferOrderById_ctrl, transferOrder_receive_ctrl } = require("../controllers/transferOrder");
 
 router.post(
-  "/transferOrders",
+  "/transferOrder",
   setTenant,
   requireSignin,
    roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
@@ -22,8 +22,8 @@ router.put(
 );
 
 
-router.get(
-  '/transferOrders',
+router.post(
+  '/get/transferOrder',
   setTenant,
   requireSignin,
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
@@ -37,6 +37,15 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getTransferOrderById_ctrl
 );
+
+router.post(
+  '/transferOrder/receive',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  transferOrder_receive_ctrl
+);
+
 
 
 

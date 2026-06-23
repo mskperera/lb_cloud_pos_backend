@@ -1,13 +1,13 @@
 
 
-const { transferOrder_Insert_Update_sql, getTransferOrder_byId_sql,getTransferOrders_sql } = require('../sql/transferOrder');
+const { transferOrder_Insert_Update_sql, getTransferOrder_byId_sql,getTransferOrders_sql, transferOrder_Insert_sql, transferOrder_receive_sql } = require('../sql/transferOrder');
 
 exports.transferOrderAdd_ctrl = async (req, res) => {
   const {
-      sourceStoreId,
-      destinationStoreId ,
-      transferDate,
-     state,
+      status,
+    sourceStoreId,
+    destinationStoreId,
+    transferDate,
     notes,
     orderList_json
   } = req.body;
@@ -20,18 +20,14 @@ exports.transferOrderAdd_ctrl = async (req, res) => {
   try {
 
     
-  const result=await transferOrder_Insert_Update_sql( tenant,
-    null,
-      sourceStoreId,
-      destinationStoreId ,
-      transferDate,
-     state,
+  const result=await transferOrder_Insert_sql(tenant,
+    status,
+    sourceStoreId,
+    destinationStoreId,
+    transferDate,
     notes,
     orderList_json,
-    "I",
-      userLogId,
-      utcOffset,
-      pageName
+    userLogId
   )
 
     res.status(201).json(result);
@@ -132,18 +128,16 @@ exports.getTransferOrders_ctrl = async (req, res) => {
 
 
 exports.getTransferOrderById_ctrl = async (req, res) => {
-  const { transferOrderId } = req.body;
+  const { transferOrderId } = req.query;
   const tenant = req.tenant;
 
   try {
-    // Basic validation to ensure an ID is provided
+  
     if (!transferOrderId) {
       return res.status(400).json({ message: "transferOrderId is required" });
     }
 
     const result = await getTransferOrder_byId_sql(tenant, transferOrderId);
-
-    // This returns the object with { header, details, outputValues }
     res.json(result);
 
   } catch (err) {
@@ -157,3 +151,36 @@ exports.getTransferOrderById_ctrl = async (req, res) => {
     });
   }
 };
+
+
+
+exports.transferOrder_receive_ctrl = async (req, res) => {
+  const {transferOrderId,items} = req.body;
+
+  const tenant=req.tenant;
+  const utcOffset='5:30';
+  const userLogId=req.authUser.userLogId;
+  const pageName='p';
+
+  try {
+
+    
+  const result=await transferOrder_receive_sql( tenant,
+      transferOrderId,
+    items,
+      userLogId,
+  )
+
+    res.status(201).json(result);
+  } catch (err) {
+    console.log('Errori: ',err)
+    return res.status(400).json({ 
+      error: {
+        message: err.message,
+        name: err.name, // include other properties if needed
+        stack: err.stack
+      }
+    });
+  }
+};
+

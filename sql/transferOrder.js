@@ -1,61 +1,54 @@
 const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
-exports.transferOrder_Insert_Update_sql = async (
+exports.transferOrder_Insert_sql = async (
     tenant,
-    tableId,
-      sourceStoreId  ,
-      destinationStoreId ,
-      transferDate,
-     state,
+    state,
+    sourceStoreId,
+    destinationStoreId,
+    transferDate,
     notes,
     orderList,
-    saveType,
-      userLogId,
-      utcOffset,
-      pageName
+    userLogId
 ) => {
-    const {pool}=tenant;
+    const { pool } = tenant;
+    const orderList_json_str = JSON.stringify(orderList);
 
-  const orderList_json_str = JSON.stringify(orderList);
-  try {
+    try {
 
-    const procedureParameters = [
-      tableId,
-      sourceStoreId  ,
-      destinationStoreId ,
-      transferDate,
-     state,
-    notes,
-    orderList_json_str,
-    saveType,
-      userLogId,
-      utcOffset,
-      pageName
-    ];
-    const procedureOutputParameters = [
-      "responseStatus",
-      "outputMessage",
-      "outTransferOrderId",
-      "transferNo"
-    ];
-    const procedureName = "transferOrder_Insert_Update";
-    const result = await executeStoredProcedureWithOutputParamsByPool(
-      procedureName,
-      procedureParameters,
-      procedureOutputParameters,
-      pool
-    );
+        const procedureParameters = [
+            state,
+            sourceStoreId,
+            destinationStoreId,
+            transferDate,
+            notes,
+            orderList_json_str,
+            userLogId
+        ];
 
-    console.log("transfer order result", result.results);
+        const procedureOutputParameters = [
+            "responseStatus",
+            "outputMessage",
+            "transferOrderId"
+        ];
 
-    return result;
-  } catch (error) {
-    console.log("error", error);
-    throw error;
-  }
+        const procedureName = "transferOrder_Insert";
+        
+        const result = await executeStoredProcedureWithOutputParamsByPool(
+            procedureName,
+            procedureParameters,
+            procedureOutputParameters,
+            pool
+        );
+
+        console.log("Transfer order result:", result.results);
+
+        return result;
+    } catch (error) {
+        console.error("Error executing transferOrder_Insert_sql:", error);
+        throw error;
+    }
 };
-
 
 exports.getTransferOrders_sql = async (
   tenant,
@@ -93,10 +86,6 @@ exports.getTransferOrders_sql = async (
 
     const { responseStatus, outputMessage } = result.outputValues;
 
-    if (responseStatus === SP_STATUS.failed || responseStatus === 'invalid') {
-      throw { message: outputMessage };
-    }
-
     return result; 
     // result.results[0] will contain the array of transfer orders
     // result.outputValues.totalRows will contain the count for pagination
@@ -133,18 +122,49 @@ exports.getTransferOrder_byId_sql = async (
 
     const { responseStatus, outputMessage } = result.outputValues;
 
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
 
-    // Because this SP returns two SELECT statements:
-    // result.results[0] = Header Data
-    // result.results[1] = Details/Items Data
     return {
-      header: result.results[0][0] || null,
-      details: result.results[1] || [],
-      outputValues: result.outputValues
+result
     };
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+exports.transferOrder_receive_sql = async (
+  tenant,
+    transferOrderId,
+    items,
+      userLogId,
+) => {
+  try {
+    const { pool } = tenant;
+    const destPriceList_json_str = JSON.stringify(items);
+
+    const procedureParameters = [
+      transferOrderId,
+      destPriceList_json_str,
+      userLogId,
+    ];
+
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage",
+    ];
+
+    const procedureName = "transferOrder_receive";
+
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+    
   } catch (error) {
     throw error;
   }
