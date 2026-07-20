@@ -7,6 +7,8 @@ const {
   getDrpSession_ctrl,
   get_latest_Session_details_ctrl,
   getSessionMismatchCheck_ctrl,
+  getSessionEndProcessedDetails_ctrl,
+  sessionEndZReport_ctrl,
 } = require("../controllers/session");
 const { setTenant } = require("../middlewares/tenancyManage");
 const {
@@ -61,6 +63,25 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
   getSessionMismatchCheck_ctrl
 );
+
+
+router.post(
+  "/session/getSessionEndProcessedDetails",
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  getSessionEndProcessedDetails_ctrl
+);
+
+router.get(
+  "/session/sessionEndZReport",
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  sessionEndZReport_ctrl
+);
+
+
 
 
 module.exports = router;

@@ -3,13 +3,15 @@ const {
   sessionEnd_srv,
   getSessionEndDetails_srv,
   get_latest_Session_details_srv,
+  getSessionEndProcessedDetails_srv,
+  getSessionEndZReport_srv,
 } = require("../services/session");
 const { drp_session_select, drp_session_select_sql, sessionMismatchCheck_sql } = require("../sql/session");
 const { stringToBoolean } = require("../utils/utils");
 
 
 exports.sessionStart_ctrl = async (req, res) => {
-  const { sessionName, terminalId, openingCash, isConfirm } = req.body;
+  const { sessionName, terminalId, openingCash,openingNote, isConfirm } = req.body;
   const tenant = req.tenant;
   const utcOffset = "5:30";
   const userLogId = 1;
@@ -45,6 +47,7 @@ exports.sessionStart_ctrl = async (req, res) => {
       sessionName,
       terminalId,
       openingCash,
+      openingNote,
       userLogId,
       utcOffset,
       pageName,
@@ -66,7 +69,7 @@ exports.sessionStart_ctrl = async (req, res) => {
 };
 
 exports.sessionEnd_ctrl = async (req, res) => {
-  const { sessionId,actualCash,short, isConfirm } = req.body;
+  const { sessionId,actualCash,actualCardTotal,cardShortOver,terminalSlipNo,short, isConfirm } = req.body;
   
   if (!sessionId) {
     return res.status(422).json({
@@ -89,7 +92,7 @@ exports.sessionEnd_ctrl = async (req, res) => {
   try {
     const sessionEndRes = await sessionEnd_srv(
       tenant,
-      sessionId,actualCash,short,
+      sessionId,actualCash,actualCardTotal,cardShortOver,terminalSlipNo,short,
       isConfirm
     );
     if (sessionEndRes.exception) {
@@ -204,6 +207,72 @@ exports.getSessionMismatchCheck_ctrl = async (req, res) => {
     res.status(200).json(sessionEndDetailsRes);
   } catch (err) {
     console.log("getSessionMismatchCheck_ctrl() -> error: ", err);
+    res
+      .status(500)
+      .json({
+        error: "Something is wrong, please contact the service provider.",
+      });
+  }
+};
+
+
+
+exports.getSessionEndProcessedDetails_ctrl = async (req, res) => {
+  const { 
+    sessionId, 
+    terminalId, 
+    startDate, 
+    endDate, 
+    skip, 
+    limit, 
+    userLogId, 
+    utcOffset, 
+    pageName 
+  } = req.body;
+  const tenant = req.tenant;
+
+  try {
+    const sessionEndDetailsRes = await getSessionEndProcessedDetails_srv(
+      tenant,
+      sessionId,
+      terminalId,
+      startDate,
+      endDate,
+      skip,
+      limit,
+      userLogId,
+      utcOffset,
+      pageName
+    );
+    if (sessionEndDetailsRes.exception) {
+      return res.status(400).json(sessionEndDetailsRes);
+    }
+
+    res.status(200).json(sessionEndDetailsRes);
+  } catch (err) {
+    console.log("getSessionEndProcessedDetails_ctrl() -> error: ", err);
+    res
+      .status(500)
+      .json({
+        error: "Something is wrong, please contact the service provider.",
+      });
+  }
+};
+
+exports.sessionEndZReport_ctrl = async (req, res) => {
+  const { sessionId } = req.query;
+  const tenant = req.tenant;
+
+  try {
+    const sessionEndDetailsRes = await getSessionEndZReport_srv(
+      tenant,
+      sessionId
+    );
+    
+
+    res.status(200).json(sessionEndDetailsRes);
+  } catch (err) {
+    console.log("sessionEndZReport_ctrl() -> error: ", err);
     res
       .status(500)
       .json({
