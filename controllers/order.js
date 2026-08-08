@@ -2,8 +2,7 @@ const { order_Insert, order_select, OrderReceipt_SelectByOrderId, voidOrder_By_O
 
 exports.orderAdd = async (req, res) => {
   const {
-    customerId,terminalId,sessionId,storeId,
-    overallDiscounts,
+    customerId,terminalId,sessionId,overallDiscounts,
     orderList,paymentList,isConfirm
   } = req.body;
 
@@ -32,11 +31,6 @@ exports.orderAdd = async (req, res) => {
         error: {message:"sessionId is Required"},
       });
     }
-    if (!storeId) {
-      return res.status(422).json({
-        error: {message:"storeId is Required"},
-      });
-    }
     
 
     if (!orderList || !orderList[0]) {
@@ -59,7 +53,7 @@ exports.orderAdd = async (req, res) => {
     
    //const {userId,roleId,gmtOffset,userLogId}=req.authUser;
 
-  const result=await order_Insert(tenant,customerId,terminalId,sessionId,storeId,
+  const result=await order_Insert(tenant,customerId,terminalId,sessionId,
     overallDiscounts,
     orderList,paymentList,IsStockSupported,
     userLogId,utcOffset,pageName,isConfirm)

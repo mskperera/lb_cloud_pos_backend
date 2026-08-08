@@ -2,6 +2,90 @@ const {SP_STATUS}=require('../constants/constants');
 const { executeStoredProcedureWithOutputParamsByPool } = require("../mysql/sql_executer");
 
 
+// exports.product_insertUpdate_sql = async (
+//   tenant,
+//   tableId,
+//   storeIdList,
+//   productName,
+//   categoryIdList,
+//   variationProductList,
+//   measurementUnitId,
+//   productTypeId,
+//   isNotForSelling,
+//   imgUrl,
+//   isUnique,
+//   isMultiUom,
+//   multiUomTierList, // Included
+//   isStockTracked,
+//   isProductItem,
+//   isAssemblyProduct,
+//   isBatchTracked,
+//   brandId,
+//   reorderLevel,
+//   isExpiringProduct,
+//   saveType,
+//   userLogId,
+//   utcOffset,
+//   pageName,
+//   isConfirm
+// ) => {
+//   try {
+//     const categoryIdList_json = JSON.stringify(categoryIdList || []);
+//     const variationProductList_json = JSON.stringify(variationProductList || []);
+//     const storeIdList_json = JSON.stringify(storeIdList || []);
+//     const multiUomTierList_json = JSON.stringify(multiUomTierList || []); // Included
+
+//     const { pool } = tenant;
+//     const procedureParameters = [
+//       tableId,
+//       storeIdList_json,
+//       productName ? productName.trim() : "",
+//       categoryIdList_json,
+//       variationProductList_json,
+//       measurementUnitId,
+//       productTypeId,
+//       isNotForSelling,
+//       imgUrl,
+//       isUnique,
+//       isMultiUom,
+//       multiUomTierList_json, // Included
+//       isStockTracked,
+//       isProductItem,
+//       isAssemblyProduct,
+//       isBatchTracked,
+//       brandId,
+//       reorderLevel,
+//       isExpiringProduct,
+//       saveType,
+//       userLogId,
+//       utcOffset,
+//       pageName,
+//       isConfirm
+//     ];
+
+//     const procedureOutputParameters = ["responseStatus", "outputMessage", "productId"];
+//     const procedureName = "Product_Insert_Update";
+
+//     const result = await executeStoredProcedureWithOutputParamsByPool(
+//       procedureName,
+//       procedureParameters,
+//       procedureOutputParameters,
+//       pool
+//     );
+
+//     const { responseStatus, outputMessage, productId } = result.outputValues || {};
+
+//     if (responseStatus === "failed") {
+//       return { error: { message: outputMessage } };
+//     }
+
+//     return { responseStatus, outputMessage, productId };
+//   } catch (error) {
+//     console.error("product_insertUpdate_sql Error:", error);
+//     throw error;
+//   }
+// };
+
 exports.product_insertUpdate_sql = async (
   tenant,
   tableId,
@@ -14,6 +98,8 @@ exports.product_insertUpdate_sql = async (
   isNotForSelling,
   imgUrl,
   isUnique,
+  isMultiUom,
+  multiUomTierList,
 isStockTracked,
 isProductItem,
 isAssemblyProduct,
@@ -31,7 +117,7 @@ isBatchTracked,
 
     const categoryIdList_json=JSON.stringify(categoryIdList);
     const variationProductList_json=JSON.stringify(variationProductList);
-    
+        const multiUomTierList_json = JSON.stringify(multiUomTierList || []); // Included
     const storeIdList_json=JSON.stringify(storeIdList);
 console.log('saveType',saveType);
     
@@ -49,6 +135,8 @@ console.log('saveType',saveType);
       isNotForSelling,
       imgUrl,
       isUnique,
+      isMultiUom,
+      multiUomTierList_json,
       isStockTracked,
       isProductItem,
       isAssemblyProduct,
@@ -247,7 +335,10 @@ exports.product_select_sql = async (
   productTypeIds,
   isProductItem=false,
 
-  isStockTracked,isExpiringProduct,isBatchTracked,
+  isStockTracked,
+  isExpiringProduct,
+  isBatchTracked,
+  uomType,
 
   productCategoryId,
   measurementUnitId,
@@ -274,7 +365,7 @@ exports.product_select_sql = async (
       storeId,
       productTypeIds ? JSON.stringify(productTypeIds):null, // Convert array to JSON string
       isProductItem,
-        isStockTracked,isExpiringProduct,isBatchTracked,
+        isStockTracked,isExpiringProduct,isBatchTracked,uomType,
       measurementUnitId,
       allSearchableFields,
       searchByKeyword,
@@ -297,10 +388,6 @@ exports.product_select_sql = async (
       pool
     );
 
-    const { responseStatus, outputMessage } = result.outputValues;
-    if (responseStatus === SP_STATUS.failed) {
-      throw { message: outputMessage };
-    }
 
     return result;
   } catch (error) {
@@ -682,3 +769,104 @@ exports.Inventory_Get_LatestPricing_sql = async (
     throw error;
   }
 };
+
+
+exports.ProductUom_Select_sql = async (
+  tenant,
+  allProductId,
+  storeId,
+  stockBatchId = null
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      allProductId,
+      storeId,
+      stockBatchId
+    ];
+    
+    // Output parameters required by product_uom_select SP
+     const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+
+    const procedureName = "product_uom_select";
+    
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+exports.batchUomDetailsByUomBarcode_Select_sql = async (
+  tenant,
+  barcode,
+  storeId 
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [barcode,storeId];
+    
+    // Output parameters required by product_uom_select SP
+     const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+
+    const procedureName = "batchUomDetailsByUomBarcode_Select";
+    
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+
+exports.product_SelectByBarcode_sql = async (
+  tenant,
+    storeId,
+ barcode,
+uomType
+) => {
+  const { pool } = tenant;
+  try {
+    const procedureParameters = [
+      storeId,
+      barcode,
+      uomType
+    ];
+    const procedureOutputParameters = [
+      "responseStatus",
+      "outputMessage"
+    ];
+    const procedureName = "product_SelectByBarcode";
+    const result = await executeStoredProcedureWithOutputParamsByPool(
+      procedureName,
+      procedureParameters,
+      procedureOutputParameters,
+      pool
+    );
+
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+

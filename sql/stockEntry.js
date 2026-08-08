@@ -586,8 +586,6 @@ try {
     pool
   );
 
-
-
   return result;
 } catch (error) {
   throw error;

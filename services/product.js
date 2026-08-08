@@ -5,7 +5,10 @@ const { product_insertUpdate_sql } = require("../sql/product");
 exports.productAdd_srv =async ( 
   tenant,
   tableId,storeIdList,productName,categoryIdList, variationProductList,
-  measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,isStockTracked,isProductItem,isAssemblyProduct,isBatchTracked,
+  measurementUnitId, productTypeId,isNotForSelling,imgUrl,isUnique,
+  isMultiUom,
+        multiUomTierList, // Included
+  isStockTracked,isProductItem,isAssemblyProduct,isBatchTracked,
   brandId,reorderLevel,isExpiringProduct,userLogId) => {
    
     if (!userLogId) {
@@ -54,6 +57,13 @@ exports.productAdd_srv =async (
       };
     }
 
+   if (isMultiUom === null || isMultiUom === "") {
+      return {
+        error: { message: "isMultiUom or not is Required" },
+      };
+    }
+
+
     if (isStockTracked === null || isStockTracked === "") {
       return {
         error: { message: "isStockTracked or not is Required" },
@@ -94,6 +104,8 @@ exports.productAdd_srv =async (
         isNotForSelling,
         imgUrl,
         isUnique,
+        isMultiUom,
+              multiUomTierList, // Included
         isStockTracked,
         isProductItem,
         isAssemblyProduct,
@@ -127,6 +139,8 @@ exports.productUpdate_srv = async (
   isNotForSelling,
   imgUrl,
   isUnique,
+  isMultiUom,
+        multiUomTierList, // Included
   isStockTracked,
   isProductItem,
   isAssemblyProduct,
@@ -189,6 +203,15 @@ exports.productUpdate_srv = async (
     };
   }
 
+
+    if (isMultiUom === null || isMultiUom === "") {
+    return {
+      error: { message: "isMultiUom or not is Required" },
+    };
+  }
+
+
+
   if (isStockTracked === null || isStockTracked === "") {
     return {
       error: { message: "isStockTracked or not is Required" },
@@ -222,6 +245,8 @@ exports.productUpdate_srv = async (
       isNotForSelling,
       imgUrl,
       isUnique,
+      isMultiUom,
+            multiUomTierList, // Included
       isStockTracked,
       isProductItem,
       isAssemblyProduct,

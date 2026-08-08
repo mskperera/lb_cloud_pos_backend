@@ -1,3 +1,4 @@
+const { getStockInfoBy_allProductId_storeId_srv } = require('../services/stockEntry');
 const { voidOrder_By_OrderId, OrderFull_Select } = require('../sql/order');
 const { stockEntry_Insert, stockEntry_Select, stockEntry_full_Select, stockEntry_void, drp_stockEntry_voiding_reason_select, getStockInfo_sql, stock_adjust_sql, get_stock_adjustments_sql, drp_adjustmentReasons_select_sql, update_price_cost_sql, get_price_change_log_sql, releaseStockBatch_sql, get_inventory_transation_history_sql, getStockInfoBy_allProductId_storeId_sql } = require('../sql/stockEntry');
 
@@ -588,7 +589,7 @@ exports.getStockInfoBy_allProductId_storeId_ctrl =async (req, res) => {
   const tenant=req.tenant;
 
   try {
-  const result= await getStockInfoBy_allProductId_storeId_sql(tenant,allProductId,storeId);
+  const result= await getStockInfoBy_allProductId_storeId_srv(tenant,allProductId,storeId);
    // console.log('products_Select result',result.results);
       res.json(result);
 

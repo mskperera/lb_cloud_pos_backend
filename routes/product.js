@@ -16,7 +16,10 @@ const {
   getVariationProductDetails_ctrl,
   getProductDetailsByInventoryId,
   getSubProductListOfAssemblyProduct_ctrl,
-  getInventoryLastPricing
+  getInventoryLastPricing,
+  getProductUoms,
+  getBatchUomDetailsByUomBarcode,
+  getProductsByBarcode
 } = require('../controllers/product');
 
 const { setTenant } = require('../middlewares/tenancyManage');
@@ -157,6 +160,33 @@ router.get(
   roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
   getInventoryLastPricing
 );
+
+
+router.get(
+  '/product/uomList',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  getProductUoms
+);
+
+
+router.get(
+  '/multiuom/batchUomDetailsByUomBarcode',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER, USER_ROLE.CASHIER]),
+  getBatchUomDetailsByUomBarcode
+);
+
+router.post(
+  '/products/search/barcode',
+  setTenant,
+  requireSignin,
+  roleMiddleware([USER_ROLE.ADMIN, USER_ROLE.MANAGER,USER_ROLE.CASHIER]),
+  getProductsByBarcode
+);
+
 
 
 
