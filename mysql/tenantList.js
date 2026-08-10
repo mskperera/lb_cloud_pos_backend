@@ -56,7 +56,7 @@ const getTenant=async(tenantId)=>{
 
     foundTenant = { pool, tenantId,jwtSecret };
     tenantList.push(foundTenant);
-    console.log('new pool is added to the poollist');
+    console.log('new pool is added to the poollist pos');
   }
 
   const tenant = tenantList.filter((p) => p.tenantId === tenantId)[0];
